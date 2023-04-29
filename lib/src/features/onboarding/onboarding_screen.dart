@@ -1,4 +1,4 @@
-import 'package:fire_alert_mobile/src/core/common_widget/custom_btn.dart';
+import 'package:fire_alert_mobile/src/features/account/login/presentation/screen/login_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/common_widget/common_widget.dart';
@@ -13,6 +13,11 @@ class OnboadingScreen extends StatefulWidget {
 }
 
 class _OnboadingScreenState extends State<OnboadingScreen> {
+  void handleNavigateLogin() {
+    // Navigate to login screen
+    Navigator.of(context).popAndPushNamed(LoginScreen.routeName);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,7 +75,7 @@ class _OnboadingScreenState extends State<OnboadingScreen> {
                   margin: const EdgeInsets.only(bottom: 50),
                   width: double.infinity,
                   child: CustomBtn(
-                    onTap: () {},
+                    onTap: handleNavigateLogin,
                     label: "Get Started",
                     style: const TextStyle(
                       color: Colors.black,
