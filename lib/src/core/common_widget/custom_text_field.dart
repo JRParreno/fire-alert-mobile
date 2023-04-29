@@ -26,6 +26,7 @@ class CustomTextField extends StatefulWidget {
   final String? hintText;
   final FormFieldValidator<String>? validators;
   final bool obscureText;
+  final FocusNode? focusNode;
 
   const CustomTextField({
     super.key,
@@ -50,6 +51,7 @@ class CustomTextField extends StatefulWidget {
     this.hintText,
     this.validators,
     this.obscureText = false,
+    this.focusNode,
   });
 
   @override
@@ -65,6 +67,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         Padding(
           padding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 24),
           child: TextFormField(
+            focusNode: widget.focusNode,
             obscureText: widget.obscureText,
             inputFormatters: widget.inputFormatters,
             onTap: widget.onTap,

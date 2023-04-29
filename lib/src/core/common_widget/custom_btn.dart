@@ -9,6 +9,7 @@ class CustomBtn extends StatelessWidget {
   final double? width;
   final double? height;
   final TextStyle? style;
+  final dynamic btnStyle;
 
   const CustomBtn({
     super.key,
@@ -18,6 +19,7 @@ class CustomBtn extends StatelessWidget {
     this.height,
     this.width,
     this.style,
+    this.btnStyle,
   });
 
   @override
@@ -27,13 +29,14 @@ class CustomBtn extends StatelessWidget {
       height: height ?? 48,
       child: ElevatedButton(
         onPressed: onTap,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor ?? ColorName.primary,
-          shape: const StadiumBorder(),
-        ),
+        style: btnStyle ??
+            ElevatedButton.styleFrom(
+              backgroundColor: backgroundColor ?? ColorName.primary,
+              shape: const StadiumBorder(),
+            ),
         child: CustomText(
           text: label,
-          style: style,
+          style: style ?? const TextStyle(color: Colors.black, fontSize: 14),
         ),
       ),
     );
