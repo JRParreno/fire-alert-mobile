@@ -3,21 +3,41 @@ import 'package:flutter/material.dart';
 import '../../../../../core/common_widget/common_widget.dart';
 
 class SignupForm extends StatelessWidget {
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
+  final TextEditingController emailCtrl;
+  final TextEditingController passwordCtrl;
+  final TextEditingController confirmPasswordCtrl;
+  final TextEditingController mobileNoCtrl;
+  final TextEditingController completeAddressCtrl;
+  final FocusNode passwordSignupFocus;
+  final FocusNode confirmPasswordFocus;
+
   final GlobalKey<FormState> formKey;
   final Widget suffixIcon;
   final bool passwordVisible;
+  final Widget confirmSuffixIcon;
+  final bool confirmPasswordVisible;
+  final bool isCheck;
+  final Function(bool) onChangeCheckBox;
+
   final VoidCallback onSubmit;
 
   const SignupForm({
     super.key,
-    required this.emailController,
-    required this.passwordController,
+    required this.emailCtrl,
+    required this.passwordCtrl,
+    required this.confirmPasswordCtrl,
+    required this.mobileNoCtrl,
+    required this.completeAddressCtrl,
     required this.formKey,
     required this.suffixIcon,
     required this.passwordVisible,
     required this.onSubmit,
+    required this.confirmPasswordVisible,
+    required this.confirmSuffixIcon,
+    required this.confirmPasswordFocus,
+    required this.passwordSignupFocus,
+    required this.onChangeCheckBox,
+    required this.isCheck,
   });
 
   @override
@@ -38,7 +58,7 @@ class SignupForm extends StatelessWidget {
                 height: 20,
               ),
               CustomTextField(
-                textController: emailController,
+                textController: emailCtrl,
                 labelText: "Email",
                 keyboardType: TextInputType.emailAddress,
                 padding: EdgeInsets.zero,
@@ -49,7 +69,7 @@ class SignupForm extends StatelessWidget {
                 color: Colors.transparent,
               ),
               CustomTextField(
-                textController: emailController,
+                textController: mobileNoCtrl,
                 labelText: "Mobile no.",
                 keyboardType: TextInputType.emailAddress,
                 padding: EdgeInsets.zero,
@@ -60,7 +80,7 @@ class SignupForm extends StatelessWidget {
                 color: Colors.transparent,
               ),
               CustomTextField(
-                textController: emailController,
+                textController: completeAddressCtrl,
                 labelText: "Complete Address",
                 keyboardType: TextInputType.emailAddress,
                 padding: EdgeInsets.zero,
@@ -71,7 +91,8 @@ class SignupForm extends StatelessWidget {
                 color: Colors.transparent,
               ),
               CustomTextField(
-                textController: passwordController,
+                focusNode: passwordSignupFocus,
+                textController: passwordCtrl,
                 labelText: "Password",
                 padding: EdgeInsets.zero,
                 parametersValidate: 'required',
@@ -83,12 +104,13 @@ class SignupForm extends StatelessWidget {
                 color: Colors.transparent,
               ),
               CustomTextField(
-                textController: passwordController,
+                textController: confirmPasswordCtrl,
+                focusNode: confirmPasswordFocus,
                 labelText: "Confirm Password",
                 padding: EdgeInsets.zero,
                 parametersValidate: 'required',
-                suffixIcon: suffixIcon,
-                obscureText: passwordVisible,
+                suffixIcon: confirmSuffixIcon,
+                obscureText: confirmPasswordVisible,
               ),
               const Divider(
                 height: 10,
@@ -96,7 +118,11 @@ class SignupForm extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Checkbox(value: true, onChanged: (value) {}),
+                  Checkbox(
+                      value: isCheck,
+                      onChanged: (value) {
+                        onChangeCheckBox(value ?? false);
+                      }),
                   const Expanded(
                     child: CustomText(
                       text:

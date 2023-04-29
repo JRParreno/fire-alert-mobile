@@ -1,29 +1,17 @@
 import 'package:fire_alert_mobile/gen/colors.gen.dart';
 import 'package:fire_alert_mobile/src/core/common_widget/custom_btn.dart';
-import 'package:fire_alert_mobile/src/features/account/login/presentation/widgets/login_form.dart';
-import 'package:fire_alert_mobile/src/features/account/login/presentation/widgets/signup_form.dart';
 import 'package:flutter/material.dart';
 
 class LoginBody extends StatelessWidget {
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
-  final GlobalKey<FormState> formKey;
-  final Widget suffixIcon;
-  final bool passwordVisible;
-  final VoidCallback onSubmit;
   final VoidCallback onChangeForm;
   final bool isLogin;
+  final Widget widget;
 
   const LoginBody({
     super.key,
-    required this.emailController,
-    required this.passwordController,
-    required this.formKey,
-    required this.suffixIcon,
-    required this.passwordVisible,
-    required this.onSubmit,
     required this.isLogin,
     required this.onChangeForm,
+    required this.widget,
   });
 
   @override
@@ -96,33 +84,7 @@ class LoginBody extends StatelessWidget {
                 ),
               ],
             ),
-            !isLogin
-                ? SignupForm(
-                    emailController: emailController,
-                    passwordController: passwordController,
-                    formKey: formKey,
-                    onSubmit: () {},
-                    passwordVisible: passwordVisible,
-                    suffixIcon: GestureDetector(
-                      onTap: () {},
-                      child: Icon(passwordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off),
-                    ),
-                  )
-                : LoginForm(
-                    emailController: emailController,
-                    passwordController: passwordController,
-                    formKey: formKey,
-                    onSubmit: () {},
-                    passwordVisible: passwordVisible,
-                    suffixIcon: GestureDetector(
-                      onTap: () {},
-                      child: Icon(passwordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off),
-                    ),
-                  ),
+            widget,
           ],
         ),
       ),
