@@ -71,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void handleSignup() {
     if (signupFormKey.currentState!.validate()) {
       // Navigator.of(context).popAndPushNamed(HomeScreen.routeName);
-    }
+    } else {}
   }
 
   void handeChangeForm() {
@@ -155,7 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         confirmPasswordCtrl: confirmPasswordCtrl,
                         mobileNoCtrl: mobileNoCtrl,
                         formKey: signupFormKey,
-                        onSubmit: () {},
+                        onSubmit: handleSignup,
                         confirmPasswordVisible: _passwordConfirmVisible,
                         confirmSuffixIcon: GestureDetector(
                           onTap: handleOnConfirmChangePassVisible,

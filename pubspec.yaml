@@ -43,6 +43,8 @@ dependencies:
   flutter_svg: ^1.1.6
   flutter_gen_runner: ^5.1.0+1
   flutter_keyboard_visibility: ^5.4.1
+  dio: ^5.1.1
+  shared_preferences: ^2.1.0
 
 dev_dependencies:
   flutter_test:
