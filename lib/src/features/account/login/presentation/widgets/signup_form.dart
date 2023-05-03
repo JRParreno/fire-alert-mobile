@@ -8,6 +8,9 @@ class SignupForm extends StatelessWidget {
   final TextEditingController confirmPasswordCtrl;
   final TextEditingController mobileNoCtrl;
   final TextEditingController completeAddressCtrl;
+  final TextEditingController lastNameCtrl;
+  final TextEditingController firstNameCtrl;
+
   final FocusNode passwordSignupFocus;
   final FocusNode confirmPasswordFocus;
 
@@ -28,6 +31,8 @@ class SignupForm extends StatelessWidget {
     required this.confirmPasswordCtrl,
     required this.mobileNoCtrl,
     required this.completeAddressCtrl,
+    required this.firstNameCtrl,
+    required this.lastNameCtrl,
     required this.formKey,
     required this.suffixIcon,
     required this.passwordVisible,
@@ -39,6 +44,19 @@ class SignupForm extends StatelessWidget {
     required this.onChangeCheckBox,
     required this.isCheck,
   });
+
+  String? regexTest({
+    required RegExp regex,
+    required String value,
+    required errorText,
+  }) {
+    final sames = value.isEmpty
+        ? "Required"
+        : regex.hasMatch(value)
+            ? null
+            : errorText;
+    return sames;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +76,8 @@ class SignupForm extends StatelessWidget {
                 height: 20,
               ),
               CustomTextField(
-                textController: emailCtrl,
-                labelText: "Email",
-                keyboardType: TextInputType.emailAddress,
+                textController: firstNameCtrl,
+                labelText: "First Name",
                 padding: EdgeInsets.zero,
                 parametersValidate: 'required',
               ),
@@ -69,11 +86,47 @@ class SignupForm extends StatelessWidget {
                 color: Colors.transparent,
               ),
               CustomTextField(
-                textController: mobileNoCtrl,
-                labelText: "Mobile no.",
+                textController: lastNameCtrl,
+                labelText: "Last Name",
+                padding: EdgeInsets.zero,
+                parametersValidate: 'required',
+              ),
+              const Divider(
+                height: 10,
+                color: Colors.transparent,
+              ),
+              CustomTextField(
+                textController: emailCtrl,
+                labelText: "Email",
                 keyboardType: TextInputType.emailAddress,
                 padding: EdgeInsets.zero,
                 parametersValidate: 'required',
+                validators: (value) {
+                  if (value != null &&
+                      RegExp(r'^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$')
+                          .hasMatch(value)) {
+                    return null;
+                  }
+                  return 'Invalid email address';
+                },
+              ),
+              const Divider(
+                height: 10,
+                color: Colors.transparent,
+              ),
+              CustomTextField(
+                textController: mobileNoCtrl,
+                labelText: "Mobile number",
+                keyboardType: TextInputType.emailAddress,
+                padding: EdgeInsets.zero,
+                parametersValidate: 'required',
+                validators: (value) {
+                  if (value != null &&
+                      RegExp(r'^(09|\+639)\d{9}$').hasMatch(value)) {
+                    return null;
+                  }
+                  return 'Invalid mobile number';
+                },
               ),
               const Divider(
                 height: 10,
@@ -111,6 +164,14 @@ class SignupForm extends StatelessWidget {
                 parametersValidate: 'required',
                 suffixIcon: confirmSuffixIcon,
                 obscureText: confirmPasswordVisible,
+                validators: (value) {
+                  if (value != null &&
+                      value.isEmpty &&
+                      value != passwordCtrl.value.text) {
+                    return "Password doesn't match";
+                  }
+                  return null;
+                },
               ),
               const Divider(
                 height: 10,
@@ -134,7 +195,7 @@ class SignupForm extends StatelessWidget {
             ],
           ),
           const Divider(
-            height: 50,
+            height: 30,
             color: Colors.transparent,
           ),
           Column(
