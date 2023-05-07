@@ -139,6 +139,31 @@ class _OTPSCreenState extends State<OTPSCreen> {
     LoaderDialog.hide(context: context);
   }
 
+  void handleBackPress() {
+    CommonDialog.showMyDialog(
+      context: context,
+      body: "Exit OTP Verification?",
+      buttons: [
+        TextButton(
+          child: const Text("Yes"),
+          onPressed: () async {
+            Navigator.of(context).pop();
+
+            Future.delayed(const Duration(milliseconds: 300), () {
+              Navigator.of(context).pop();
+            });
+          },
+        ),
+        TextButton(
+          child: const Text("No"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     w = AppConstant.kMockupWidth / SizeConfig.screenWidth;
@@ -148,6 +173,13 @@ class _OTPSCreenState extends State<OTPSCreen> {
       resizeToAvoidBottomInset: true,
       appBar: buildAppBar(
         context: context,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            size: 25,
+          ),
+          onPressed: handleBackPress,
+        ),
       ),
       bottomNavigationBar: buildBottomNavigation(),
       body: SingleChildScrollView(

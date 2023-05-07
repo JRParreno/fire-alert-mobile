@@ -13,18 +13,17 @@ PreferredSizeWidget buildAppBar({
     titleSpacing: 0,
     backgroundColor: ColorName.primary,
     centerTitle: true,
-    leading: leading != null
-        ? !showBackBtn
-            ? IconButton(
-                icon: const Icon(
-                  Icons.arrow_back,
-                  size: 25,
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-              )
-            : null
+    leading: !showBackBtn
+        ? leading ??
+            IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                size: 25,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            )
         : null,
     title: Text(
       title ?? 'FireGuard',
