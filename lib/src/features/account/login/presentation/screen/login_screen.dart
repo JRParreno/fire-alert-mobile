@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:fire_alert_mobile/src/core/common_widget/common_widget.dart';
 import 'package:fire_alert_mobile/src/core/common_widget/loader_dialog.dart';
-import 'package:fire_alert_mobile/src/core/errors/model/error_message.dart';
 import 'package:fire_alert_mobile/src/features/account/login/presentation/widgets/login_body.dart';
 import 'package:fire_alert_mobile/src/features/account/login/presentation/widgets/login_form.dart';
 import 'package:fire_alert_mobile/src/features/account/login/presentation/widgets/signup_form.dart';
 import 'package:fire_alert_mobile/src/features/account/signup/data/models/signup.dart';
-import 'package:fire_alert_mobile/src/features/account/signup/data/repositories/signup_repository.dart';
 import 'package:fire_alert_mobile/src/features/account/signup/data/repositories/signup_repository_impl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -93,7 +91,6 @@ class _LoginScreenState extends State<LoginScreen> {
         );
         SignupImpl().register(signup).then((value) {
           LoaderDialog.hide(context: context);
-          print(value);
         }).catchError((onError) {
           LoaderDialog.hide(context: context);
           Future.delayed(const Duration(milliseconds: 500), () {

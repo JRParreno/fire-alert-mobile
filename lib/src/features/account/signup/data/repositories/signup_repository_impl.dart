@@ -1,7 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:http/http.dart' as http;
-
 import 'package:dio/dio.dart';
 import 'package:fire_alert_mobile/src/core/config/app_constant.dart';
 import 'package:fire_alert_mobile/src/features/account/signup/data/models/signup.dart';
