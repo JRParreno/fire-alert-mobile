@@ -1,12 +1,19 @@
 import 'dart:async';
+import 'package:fire_alert_mobile/src/core/bloc/profile/profile_bloc.dart';
 import 'package:fire_alert_mobile/src/core/common_widget/common_widget.dart';
+import 'package:fire_alert_mobile/src/core/local_storage/local_storage.dart';
+import 'package:fire_alert_mobile/src/features/account/login/data/repositories/login_repository_impl.dart';
 import 'package:fire_alert_mobile/src/features/account/login/presentation/widgets/login_body.dart';
 import 'package:fire_alert_mobile/src/features/account/login/presentation/widgets/login_form.dart';
 import 'package:fire_alert_mobile/src/features/account/login/presentation/widgets/signup_form.dart';
 import 'package:fire_alert_mobile/src/features/account/otp/presentation/screen/otp_screen.dart';
+import 'package:fire_alert_mobile/src/features/account/profile/data/models/profile.dart';
+import 'package:fire_alert_mobile/src/features/account/profile/data/repositories/profile_repository_impl.dart';
 import 'package:fire_alert_mobile/src/features/account/signup/data/models/signup.dart';
 import 'package:fire_alert_mobile/src/features/account/signup/data/repositories/signup_repository_impl.dart';
+import 'package:fire_alert_mobile/src/features/home/presentation/screen/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -66,7 +73,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
     passwordSignupFocus.addListener(onCheckFocusPassword);
     confirmPasswordFocus.addListener(onCheckFocusPassword);
-    testSignupValues();
+    emailCtrl.text = "jhonrhayparreno22@gmail.com";
+    passwordCtrl.text = "2020Rtutest@";
+    // testSignupValues();
   }
 
   void testSignupValues() {
@@ -84,20 +93,76 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void handleLogin() {
     if (loginFormKey.currentState!.validate()) {
-      // Navigator.of(context).popAndPushNamed(HomeScreen.routeName);
+      LoaderDialog.show(context: context);
+
+      LoginRepositoryImpl()
+          .login(email: emailCtrl.value.text, password: passwordCtrl.value.text)
+          .then((value) async {
+        await LocalStorage.storeLocalStorage(
+            '_token', value['data']['access_token']);
+        await LocalStorage.storeLocalStorage(
+            '_refreshToken', value['data']['refresh_token']);
+        handleGetProfile();
+      }).catchError((onError) {
+        LoaderDialog.hide(context: context);
+        Future.delayed(const Duration(milliseconds: 500), () {
+          CommonDialog.showMyDialog(
+            context: context,
+            title: "FireGuard",
+            body: "Invalid email or password",
+            isError: true,
+          );
+        });
+      });
     }
+  }
+
+  void handleGetProfile() async {
+    await ProfileRepositoryImpl().fetchProfile().then((profile) async {
+      if (profile.otpVerified) {
+        await LocalStorage.storeLocalStorage('_user', profile.toJson());
+
+        handleSetProfileBloc(profile);
+        Future.delayed(const Duration(milliseconds: 500), () {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            HomeScreen.routeName,
+            (route) => false,
+          );
+        });
+      } else {
+        Future.delayed(const Duration(milliseconds: 500), () {
+          // Navigate OTP screen
+          Navigator.of(context).pushNamed(
+            OTPSCreen.routeName,
+            arguments: OTPArgs(
+              userId: profile.pk,
+              email: profile.email,
+            ),
+          );
+        });
+      }
+    }).catchError((onError) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        CommonDialog.showMyDialog(
+          context: context,
+          title: "FireGuard",
+          body: onError['data']['error_message'],
+          isError: true,
+        );
+      });
+    });
+    LoaderDialog.hide(context: context);
+  }
+
+  void handleSetProfileBloc(Profile profile) {
+    BlocProvider.of<ProfileBloc>(context).add(
+      SetProfileEvent(profile: profile),
+    );
   }
 
   void handleSignup() {
     if (signupFormKey.currentState!.validate()) {
       if (isCheck) {
-        // Navigator.of(context).pushNamed(
-        //   OTPSCreen.routeName,
-        //   arguments: OTPArgs(
-        //     userId: "15",
-        //     email: emailSignupCtrl.value.text,
-        //   ),
-        // );
         LoaderDialog.show(context: context);
         final signup = Signup(
           email: emailSignupCtrl.text,
@@ -244,10 +309,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       )
                     : LoginForm(
-                        emailController: emailSignupCtrl,
-                        passwordController: passwordSignupCtrl,
-                        formKey: signupFormKey,
-                        onSubmit: () {},
+                        emailController: emailCtrl,
+                        passwordController: passwordCtrl,
+                        formKey: loginFormKey,
+                        onSubmit: handleLogin,
                         passwordVisible: _passwordVisible,
                         suffixIcon: GestureDetector(
                           onTap: handleOnChangePassVisible,

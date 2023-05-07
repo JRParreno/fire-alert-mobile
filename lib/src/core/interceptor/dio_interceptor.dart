@@ -6,7 +6,10 @@ class DioInterceptor extends Interceptor {
   @override
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    options.headers['Authorization'] = LocalStorage.readLocalStorage('_token');
+    final token = await LocalStorage.readLocalStorage('_token');
+
+    options.headers['Authorization'] = 'Bearer $token';
+
     super.onRequest(options, handler);
   }
 
