@@ -1,8 +1,12 @@
 import 'dart:async';
 
+import 'package:fire_alert_mobile/src/core/common_widget/common_widget.dart';
+import 'package:fire_alert_mobile/src/core/common_widget/loader_dialog.dart';
 import 'package:fire_alert_mobile/src/features/account/login/presentation/widgets/login_body.dart';
 import 'package:fire_alert_mobile/src/features/account/login/presentation/widgets/login_form.dart';
 import 'package:fire_alert_mobile/src/features/account/login/presentation/widgets/signup_form.dart';
+import 'package:fire_alert_mobile/src/features/account/signup/data/models/signup.dart';
+import 'package:fire_alert_mobile/src/features/account/signup/data/repositories/signup_repository_impl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
@@ -25,6 +29,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController mobileNoCtrl = TextEditingController();
   final TextEditingController confirmPasswordCtrl = TextEditingController();
   final TextEditingController completeAddressCtrl = TextEditingController();
+  final TextEditingController firstNameCtrl = TextEditingController();
+  final TextEditingController lastNameCtrl = TextEditingController();
+
   FocusNode passwordSignupFocus = FocusNode();
   FocusNode confirmPasswordFocus = FocusNode();
 
@@ -70,8 +77,39 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void handleSignup() {
     if (signupFormKey.currentState!.validate()) {
-      // Navigator.of(context).popAndPushNamed(HomeScreen.routeName);
-    }
+      if (isCheck) {
+        // Navigator.of(context).popAndPushNamed(HomeScreen.routeName);
+        LoaderDialog.show(context: context);
+        final signup = Signup(
+          email: emailCtrl.text,
+          mobileNumber: mobileNoCtrl.text,
+          completeAddress: completeAddressCtrl.text,
+          password: passwordSignupCtrl.text,
+          confirmPassword: confirmPasswordCtrl.text,
+          firstName: firstNameCtrl.text,
+          lastName: lastNameCtrl.text,
+        );
+        SignupImpl().register(signup).then((value) {
+          LoaderDialog.hide(context: context);
+        }).catchError((onError) {
+          LoaderDialog.hide(context: context);
+          Future.delayed(const Duration(milliseconds: 500), () {
+            CommonDialog.showMyDialog(
+              context: context,
+              title: "FireGuard",
+              body: onError['data']['error_message'],
+              isError: true,
+            );
+          });
+        });
+      } else {
+        CommonDialog.showMyDialog(
+          context: context,
+          title: "FireGuard",
+          body: "Please agreed to terms and conditions",
+        );
+      }
+    } else {}
   }
 
   void handeChangeForm() {
@@ -102,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void onCheckFocusPassword() {
     keyboardSubscription.onData((data) {
       setState(() {
-        heightForm = data ? 0.05 : 0.2;
+        heightForm = data ? 1 : 0.2;
       });
     });
   }
@@ -135,7 +173,9 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
             Positioned(
-              top: MediaQuery.of(context).size.height * heightForm,
+              top: isLogin
+                  ? MediaQuery.of(context).size.height * heightForm
+                  : null,
               child: LoginBody(
                 onChangeForm: handeChangeForm,
                 isLogin: isLogin,
@@ -147,15 +187,17 @@ class _LoginScreenState extends State<LoginScreen> {
                             isCheck = value;
                           });
                         },
+                        firstNameCtrl: firstNameCtrl,
+                        lastNameCtrl: lastNameCtrl,
                         confirmPasswordFocus: confirmPasswordFocus,
                         passwordSignupFocus: passwordSignupFocus,
                         emailCtrl: emailCtrl,
-                        passwordCtrl: passwordCtrl,
+                        passwordCtrl: passwordSignupCtrl,
                         completeAddressCtrl: completeAddressCtrl,
                         confirmPasswordCtrl: confirmPasswordCtrl,
                         mobileNoCtrl: mobileNoCtrl,
                         formKey: signupFormKey,
-                        onSubmit: () {},
+                        onSubmit: handleSignup,
                         confirmPasswordVisible: _passwordConfirmVisible,
                         confirmSuffixIcon: GestureDetector(
                           onTap: handleOnConfirmChangePassVisible,

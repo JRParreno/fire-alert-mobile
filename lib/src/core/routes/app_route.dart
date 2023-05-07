@@ -1,4 +1,5 @@
 import 'package:fire_alert_mobile/src/features/account/login/presentation/screen/login_screen.dart';
+import 'package:fire_alert_mobile/src/features/account/otp/presentation/screen/otp_screen.dart';
 import 'package:fire_alert_mobile/src/features/onboarding/onboarding_screen.dart';
 import 'package:fire_alert_mobile/src/features/splash/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,11 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case LoginScreen.routeName:
         return const LoginScreen();
+    }
+    switch (settings.name) {
+      case OTPSCreen.routeName:
+        final args = settings.arguments! as OTPArgs;
+        return OTPSCreen(args: args);
     }
     return const Scaffold(
       resizeToAvoidBottomInset: false,
