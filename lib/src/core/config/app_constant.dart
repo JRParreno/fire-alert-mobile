@@ -21,4 +21,5 @@ class AppConstant {
   static const clientSecret =
       'CIcoBGUhhxMz3DUORPEfjjdDbdY7g7iLFzd9SzSE9pMkJaOhDlCVmuo1bYJfGpsDt5AC9cBM7kjlOLUpmwrAWfO1vJ5UYljnwJVPWXn3AIJ4efJe7yGZ7g8Tojkf2Ypd';
   static const apiUrl = 'http://192.168.1.3:8000/api';
+  static const apiUser = 'http://192.168.1.3:8000/user';
 }

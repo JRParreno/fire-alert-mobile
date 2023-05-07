@@ -1,10 +1,9 @@
 import 'dart:async';
-
 import 'package:fire_alert_mobile/src/core/common_widget/common_widget.dart';
-import 'package:fire_alert_mobile/src/core/common_widget/loader_dialog.dart';
 import 'package:fire_alert_mobile/src/features/account/login/presentation/widgets/login_body.dart';
 import 'package:fire_alert_mobile/src/features/account/login/presentation/widgets/login_form.dart';
 import 'package:fire_alert_mobile/src/features/account/login/presentation/widgets/signup_form.dart';
+import 'package:fire_alert_mobile/src/features/account/otp/presentation/screen/otp_screen.dart';
 import 'package:fire_alert_mobile/src/features/account/signup/data/models/signup.dart';
 import 'package:fire_alert_mobile/src/features/account/signup/data/repositories/signup_repository_impl.dart';
 import 'package:flutter/material.dart';
@@ -67,6 +66,20 @@ class _LoginScreenState extends State<LoginScreen> {
 
     passwordSignupFocus.addListener(onCheckFocusPassword);
     confirmPasswordFocus.addListener(onCheckFocusPassword);
+    testSignupValues();
+  }
+
+  void testSignupValues() {
+    emailSignupCtrl.text = "jhonrhayparreno22@gmail.com";
+    passwordSignupCtrl.text = "2020Rtutest@";
+    mobileNoCtrl.text = "09321764095";
+    confirmPasswordCtrl.text = "2020Rtutest@";
+    completeAddressCtrl.text = "1977C FB Harrison Pasay City";
+    firstNameCtrl.text = "Jhon Rhay";
+    lastNameCtrl.text = "Parreno";
+    setState(() {
+      isCheck = true;
+    });
   }
 
   void handleLogin() {
@@ -78,10 +91,16 @@ class _LoginScreenState extends State<LoginScreen> {
   void handleSignup() {
     if (signupFormKey.currentState!.validate()) {
       if (isCheck) {
-        // Navigator.of(context).popAndPushNamed(HomeScreen.routeName);
+        // Navigator.of(context).pushNamed(
+        //   OTPSCreen.routeName,
+        //   arguments: OTPArgs(
+        //     userId: "15",
+        //     email: emailSignupCtrl.value.text,
+        //   ),
+        // );
         LoaderDialog.show(context: context);
         final signup = Signup(
-          email: emailCtrl.text,
+          email: emailSignupCtrl.text,
           mobileNumber: mobileNoCtrl.text,
           completeAddress: completeAddressCtrl.text,
           password: passwordSignupCtrl.text,
@@ -91,6 +110,17 @@ class _LoginScreenState extends State<LoginScreen> {
         );
         SignupImpl().register(signup).then((value) {
           LoaderDialog.hide(context: context);
+
+          Future.delayed(const Duration(milliseconds: 500), () {
+            // Navigate OTP screen
+            Navigator.of(context).pushNamed(
+              OTPSCreen.routeName,
+              arguments: OTPArgs(
+                userId: value['data']['id'].toString(),
+                email: emailSignupCtrl.value.text,
+              ),
+            );
+          });
         }).catchError((onError) {
           LoaderDialog.hide(context: context);
           Future.delayed(const Duration(milliseconds: 500), () {
@@ -191,7 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         lastNameCtrl: lastNameCtrl,
                         confirmPasswordFocus: confirmPasswordFocus,
                         passwordSignupFocus: passwordSignupFocus,
-                        emailCtrl: emailCtrl,
+                        emailCtrl: emailSignupCtrl,
                         passwordCtrl: passwordSignupCtrl,
                         completeAddressCtrl: completeAddressCtrl,
                         confirmPasswordCtrl: confirmPasswordCtrl,
