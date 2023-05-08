@@ -5,6 +5,7 @@ import 'package:fire_alert_mobile/src/features/home/presentation/widget/carousel
 import 'package:fire_alert_mobile/src/features/home/presentation/widget/carousel/home_carousel_loading.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/widget/home_appbar.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/widget/home_drawer.dart';
+import 'package:fire_alert_mobile/src/features/home/presentation/widget/navigation/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isLoading = true;
   int currentIndex = 0;
   List<Carousel> carousels = [];
+  int currentTab = 0;
 
   @override
   void initState() {
@@ -44,6 +46,14 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: const HomeDrawer(),
       appBar: homeAppBar(
         context: context,
+      ),
+      bottomNavigationBar: BottomNavigation(
+        selectedIndex: currentTab,
+        onTap: (value) {
+          setState(() {
+            currentTab = value;
+          });
+        },
       ),
       body: SizedBox(
         child: Column(
@@ -105,11 +115,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            // Expanded(
-            //   child: Container(
-            //     color: Colors.red,
-            //   ),
-            // ),
           ],
         ),
       ),
