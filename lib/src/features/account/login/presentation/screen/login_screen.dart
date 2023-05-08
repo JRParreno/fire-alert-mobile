@@ -73,9 +73,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
     passwordSignupFocus.addListener(onCheckFocusPassword);
     confirmPasswordFocus.addListener(onCheckFocusPassword);
+    // testLoginValues();
+    // testSignupValues();
+  }
+
+  void testLoginValues() {
     emailCtrl.text = "jhonrhayparreno22@gmail.com";
     passwordCtrl.text = "2020Rtutest@";
-    // testSignupValues();
   }
 
   void testSignupValues() {
