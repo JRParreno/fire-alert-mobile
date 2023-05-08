@@ -3,6 +3,7 @@ import 'package:fire_alert_mobile/src/core/bloc/profile/profile_bloc.dart';
 import 'package:fire_alert_mobile/src/core/local_storage/local_storage.dart';
 import 'package:fire_alert_mobile/src/core/routes/app_route.dart';
 import 'package:fire_alert_mobile/src/features/account/profile/data/models/profile.dart';
+import 'package:fire_alert_mobile/src/features/account/profile/data/repositories/profile_repository_impl.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/screen/home_screen.dart';
 import 'package:fire_alert_mobile/src/features/onboarding/onboarding_screen.dart';
 import 'package:flutter/material.dart';
@@ -30,8 +31,8 @@ class _FireAlertAppState extends State<FireAlertApp> {
     // ignore_for_file: avoid_print
     final user = await LocalStorage.readLocalStorage('_user');
     if (user != null) {
-      final Profile profile = Profile.fromJson(user);
-      setProfileBloc(profile: profile, ctx: ctx);
+      final userProfile = await ProfileRepositoryImpl().fetchProfile();
+      setProfileBloc(profile: userProfile, ctx: ctx);
     } else {
       await LocalStorage.deleteLocalStorage('_user');
       await LocalStorage.deleteLocalStorage('_refreshToken');
