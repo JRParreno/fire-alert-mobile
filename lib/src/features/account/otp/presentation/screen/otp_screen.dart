@@ -169,30 +169,36 @@ class _OTPSCreenState extends State<OTPSCreen> {
     w = AppConstant.kMockupWidth / SizeConfig.screenWidth;
     h = AppConstant.kMockupHeight / SizeConfig.screenHeight;
 
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: buildAppBar(
-        context: context,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            size: 25,
+    return WillPopScope(
+      onWillPop: () async {
+        handleBackPress();
+        return true;
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        appBar: buildAppBar(
+          context: context,
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              size: 25,
+            ),
+            onPressed: handleBackPress,
           ),
-          onPressed: handleBackPress,
         ),
-      ),
-      bottomNavigationBar: buildBottomNavigation(),
-      body: SingleChildScrollView(
-        child: SizedBox(
-          child: OTPBody(
-            duration: duration,
-            email: widget.args.email,
-            otp: otp,
-            resendCtr: _resendCtr,
-            verifyEmpty: verifyEmpty,
-            errorController: errorController,
-            timer: _timer,
-            resendOTP: handleResendOTP,
+        bottomNavigationBar: buildBottomNavigation(),
+        body: SingleChildScrollView(
+          child: SizedBox(
+            child: OTPBody(
+              duration: duration,
+              email: widget.args.email,
+              otp: otp,
+              resendCtr: _resendCtr,
+              verifyEmpty: verifyEmpty,
+              errorController: errorController,
+              timer: _timer,
+              resendOTP: handleResendOTP,
+            ),
           ),
         ),
       ),
