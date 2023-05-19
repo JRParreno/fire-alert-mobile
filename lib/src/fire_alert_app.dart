@@ -74,14 +74,13 @@ class _FireAlertAppState extends State<FireAlertApp> {
             minTextAdapt: true,
             builder: ((context, child) {
               return MaterialApp(
-                title: 'Flutter Demo',
                 theme: ThemeData(
                   primarySwatch: Colors.blue,
                 ),
                 onGenerateRoute: generateRoute,
                 home: state is ProfileLoaded
                     ? const HomeScreen()
-                    : const OnboadingScreen(),
+                    : const OnBoardingScreen(),
               );
             }),
           );

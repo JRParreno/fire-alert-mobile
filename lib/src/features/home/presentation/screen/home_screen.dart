@@ -1,12 +1,12 @@
-import 'package:fire_alert_mobile/src/features/home/data/models/carousel.dart';
-import 'package:fire_alert_mobile/src/features/home/data/repositories/carousel/carousel_repository_impl.dart';
-import 'package:fire_alert_mobile/src/features/home/presentation/widget/carousel/home_carousel.dart';
-import 'package:fire_alert_mobile/src/features/home/presentation/widget/carousel/home_carousel_list_scroll_indicators.dart';
-import 'package:fire_alert_mobile/src/features/home/presentation/widget/carousel/home_carousel_loading.dart';
+import 'package:fire_alert_mobile/src/features/account/profile/presentation/screens/profile_screen.dart';
+import 'package:fire_alert_mobile/src/features/fire_alert/presentation/screen/fire_alert_screen.dart';
+import 'package:fire_alert_mobile/src/features/home/presentation/screen/information_screen.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/widget/home_appbar.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/widget/home_drawer.dart';
-import 'package:fire_alert_mobile/src/features/home/presentation/widget/navigation/bottom_navigation.dart';
+import 'package:fire_alert_mobile/src/features/home/presentation/widget/navigation/persistent_bottom_navigation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/home';
@@ -17,107 +17,53 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool isLoading = true;
-  int currentIndex = 0;
-  List<Carousel> carousels = [];
   int currentTab = 0;
+  final PersistentTabController _controller =
+      PersistentTabController(initialIndex: 0);
 
-  @override
-  void initState() {
-    super.initState();
+  final _buildScreens = [
+    const InformationScreen(),
+    const FireAlertScreen(),
+    const ProfileScreen(),
+  ];
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => handleGetCarousel());
-  }
-
-  void handleGetCarousel() async {
-    Future.delayed(const Duration(seconds: 4), () async {
-      final tempCarousel = await CarouselRepositoryImpl().fetchCarousel();
-      setState(() {
-        carousels = tempCarousel;
-        isLoading = false;
-      });
-    });
+  List<PersistentBottomNavBarItem> _navBarsItems() {
+    return [
+      PersistentBottomNavBarItem(
+        icon: const Icon(CupertinoIcons.home),
+        title: ("Home"),
+        activeColorPrimary: CupertinoColors.activeBlue,
+        inactiveColorPrimary: CupertinoColors.systemGrey,
+      ),
+      PersistentBottomNavBarItem(
+        icon: const Icon(CupertinoIcons.bell_fill, color: Colors.white),
+        title: ("FireGuard"),
+        activeColorPrimary: CupertinoColors.activeBlue,
+        inactiveColorPrimary: CupertinoColors.systemGrey,
+      ),
+      PersistentBottomNavBarItem(
+        icon: const Icon(CupertinoIcons.settings),
+        title: ("Settings"),
+        activeColorPrimary: CupertinoColors.activeBlue,
+        inactiveColorPrimary: CupertinoColors.systemGrey,
+      ),
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      drawer: const HomeDrawer(),
-      appBar: homeAppBar(
-        context: context,
-      ),
-      bottomNavigationBar: BottomNavigation(
-        selectedIndex: currentTab,
-        onTap: (value) {
-          setState(() {
-            currentTab = value;
-          });
-        },
-      ),
-      body: SizedBox(
-        child: Column(
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(30),
-                ),
-                color: Colors.white,
-              ),
-              padding: const EdgeInsets.only(
-                bottom: 20,
-              ),
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  if (isLoading) ...[
-                    HomeCarouselLoading(
-                      onChanged: (value) {
-                        setState(() {
-                          currentIndex = value;
-                        });
-                      },
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    HomeCarouselListScrollIndicators(
-                      carousels: carousels,
-                      currentCarousel: currentIndex,
-                      isLoading: isLoading,
-                    ),
-                  ] else ...[
-                    Column(
-                      children: [
-                        HomeCarousel(
-                          carousels: carousels,
-                          onChanged: (value) {
-                            setState(() {
-                              currentIndex = value;
-                            });
-                          },
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        HomeCarouselListScrollIndicators(
-                          carousels: carousels,
-                          isLoading: isLoading,
-                          currentCarousel: currentIndex,
-                        ),
-                      ],
-                    ),
-                  ]
-                ],
-              ),
-            ),
-          ],
+        backgroundColor: Colors.white,
+        drawer: const HomeDrawer(),
+        appBar: homeAppBar(
+          context: context,
         ),
-      ),
-    );
+        body: SizedBox(
+          child: PersistentBottomNavigation(
+            buildScreens: _buildScreens,
+            controller: _controller,
+            navBarsItems: _navBarsItems(),
+          ),
+        ));
   }
 }

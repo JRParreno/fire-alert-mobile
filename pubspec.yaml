@@ -52,6 +52,8 @@ dependencies:
   flutter_native_splash: ^2.2.18
   carousel_slider: ^4.2.1
   cached_network_image: ^3.2.3
+  persistent_bottom_nav_bar: ^5.0.2
+  ndialog: ^4.3.0
 
 dev_dependencies:
   flutter_test:
