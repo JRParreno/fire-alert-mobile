@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:fire_alert_mobile/src/core/bloc/common/common_event.dart';
 import 'package:fire_alert_mobile/src/core/bloc/common/common_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,6 +10,7 @@ class MediaBloc extends Bloc<MediaEvent, MediaState> {
   MediaBloc() : super(const InitialState()) {
     on<AddCameraEvent>(_addCameraEvent);
     on<AddVideoEvent>(_addVideoEvent);
+    on<InitialEvent>(_initialEvent);
   }
 
   void _addCameraEvent(AddCameraEvent event, Emitter<MediaState> emit) {
@@ -33,5 +35,9 @@ class MediaBloc extends Bloc<MediaEvent, MediaState> {
     return emit(
       MediaLoaded(videoPath: event.path),
     );
+  }
+
+  void _initialEvent(InitialEvent event, Emitter<MediaState> emit) {
+    return emit(const InitialState());
   }
 }

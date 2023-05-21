@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/media_bloc.dart';
+import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/media_bloc/media_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_player/video_player.dart';
@@ -8,11 +8,13 @@ import 'package:video_player/video_player.dart';
 class PreviewVideo extends StatefulWidget {
   final String filePath;
   final bool isPreviewOnly;
+  final String? videoUrl;
 
   const PreviewVideo({
     Key? key,
     required this.filePath,
     this.isPreviewOnly = false,
+    this.videoUrl,
   }) : super(key: key);
 
   @override
@@ -29,7 +31,13 @@ class _PreviewVideoState extends State<PreviewVideo> {
   }
 
   Future _initVideoPlayer() async {
-    _videoPlayerController = VideoPlayerController.file(File(widget.filePath));
+    if (widget.videoUrl != null) {
+      _videoPlayerController = VideoPlayerController.network(widget.videoUrl!);
+    } else {
+      _videoPlayerController =
+          VideoPlayerController.file(File(widget.filePath));
+    }
+
     await _videoPlayerController.initialize();
     await _videoPlayerController.setLooping(true);
     await _videoPlayerController.play();
@@ -48,8 +56,10 @@ class _PreviewVideoState extends State<PreviewVideo> {
                 IconButton(
                   icon: const Icon(Icons.check),
                   onPressed: () {
-                    BlocProvider.of<MediaBloc>(context)
-                        .add(AddVideoEvent(widget.filePath));
+                    if (widget.videoUrl == null) {
+                      BlocProvider.of<MediaBloc>(context)
+                          .add(AddVideoEvent(widget.filePath));
+                    }
                     Navigator.pop(context);
                   },
                 )

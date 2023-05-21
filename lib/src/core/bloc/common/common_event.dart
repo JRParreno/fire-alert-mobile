@@ -1,9 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:fire_alert_mobile/src/core/bloc/profile/profile_bloc.dart';
-import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/media_bloc.dart';
+import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/fire_alert_bloc/fire_alert_bloc.dart';
+import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/media_bloc/media_bloc.dart';
 
 abstract class CommonEvent extends Equatable
-    implements ProfileEvent, MediaEvent {
+    implements ProfileEvent, MediaEvent, FireAlertEvent {
   const CommonEvent();
 
   @override

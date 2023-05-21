@@ -64,15 +64,15 @@ class FireAlert {
 
   factory FireAlert.fromMap(Map<String, dynamic> map) {
     return FireAlert(
-      sender: map['sender'] as String,
-      googleMapUrl: map['googleMapUrl'] as String,
+      sender: map['sender'].toString(),
+      googleMapUrl: map['google_map_url'] as String,
       longitude: map['longitude'] as double,
       latitude: map['latitude'] as double,
-      incidentType: map['incidentType'] as String,
+      incidentType: map['incident_type'] as String,
       message: map['message'] as String,
       image: map['image'] != null ? map['image'] as String : null,
       video: map['video'] != null ? map['video'] as String : null,
-      pk: map['pk'] != null ? map['pk'] as String : null,
+      pk: map['pk'] != null ? map['pk']!.toString() : null,
     );
   }
 

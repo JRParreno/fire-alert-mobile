@@ -5,7 +5,8 @@ import 'package:fire_alert_mobile/src/core/provider/custom_notification.dart';
 import 'package:fire_alert_mobile/src/core/routes/app_route.dart';
 import 'package:fire_alert_mobile/src/features/account/profile/data/models/profile.dart';
 import 'package:fire_alert_mobile/src/features/account/profile/data/repositories/profile_repository_impl.dart';
-import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/media_bloc.dart';
+import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/fire_alert_bloc/fire_alert_bloc.dart';
+import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/media_bloc/media_bloc.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/screen/home_screen.dart';
 import 'package:fire_alert_mobile/src/features/onboarding/onboarding_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -86,6 +87,9 @@ class _FireAlertAppState extends State<FireAlertApp> {
       BlocProvider.of<ProfileBloc>(ctx).add(
         SetProfileEvent(profile: profile),
       );
+      BlocProvider.of<FireAlertBloc>(ctx).add(
+        OnFetchFireAlert(),
+      );
     } else {
       BlocProvider.of<ProfileBloc>(ctx).add(
         const InitialEvent(),
@@ -99,6 +103,7 @@ class _FireAlertAppState extends State<FireAlertApp> {
       providers: [
         BlocProvider(create: (ctx) => ProfileBloc()),
         BlocProvider(create: (ctx) => MediaBloc()),
+        BlocProvider(create: (ctx) => FireAlertBloc()),
       ],
       child: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (ctx, state) {

@@ -7,10 +7,10 @@ import 'package:fire_alert_mobile/src/features/fire_alert/data/repositories/fire
 class FireAlertRepositoryImpl extends FireAlertRepository {
   final Dio dio = Dio();
   final formData = FormData();
+  final String url = '${AppConstant.apiUrl}/fire-guard';
 
   @override
   Future<FireAlert> sendFireAlert(FireAlert alert) async {
-    const String url = '${AppConstant.apiUrl}/fire-guard';
     DateTime dateToday = DateTime.now();
 
     final data = FormData.fromMap(
@@ -41,6 +41,22 @@ class FireAlertRepositoryImpl extends FireAlertRepository {
         .then((value) {
       final response = FireAlert.fromMap(value.data);
       return response;
+    }).catchError((error) {
+      throw error;
+    }).onError((error, stackTrace) {
+      throw error!;
+    });
+  }
+
+  @override
+  Future<FireAlert?> fetchCurrentFireAlert() async {
+    return await ApiInterceptor.apiInstance().get(url).then((value) {
+      final result = value.data['results'] as List<dynamic>;
+
+      if (result.isNotEmpty) {
+        return FireAlert.fromMap(result.first);
+      }
+      return null;
     }).catchError((error) {
       throw error;
     }).onError((error, stackTrace) {

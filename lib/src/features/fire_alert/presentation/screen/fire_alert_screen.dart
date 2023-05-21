@@ -1,18 +1,22 @@
 import 'package:app_settings/app_settings.dart';
 import 'package:fire_alert_mobile/gen/colors.gen.dart';
+import 'package:fire_alert_mobile/src/core/bloc/common/common_event.dart';
 import 'package:fire_alert_mobile/src/core/common_widget/common_widget.dart';
+import 'package:fire_alert_mobile/src/core/config/app_constant.dart';
 import 'package:fire_alert_mobile/src/core/location/get_current_location.dart';
 import 'package:fire_alert_mobile/src/core/permission/app_permission.dart';
 import 'package:fire_alert_mobile/src/core/utils/profile_utils.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/data/models/fire_alert.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/data/repositories/fire_alert_repository_impl.dart';
-import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/media_bloc.dart';
+import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/fire_alert_bloc/fire_alert_bloc.dart';
+import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/media_bloc/media_bloc.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/widgets/camera.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/widgets/report_form.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/widgets/video.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:ndialog/ndialog.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -32,6 +36,7 @@ class _FireAlertScreenState extends State<FireAlertScreen> {
   final TextEditingController googleMapUrlCtrl = TextEditingController();
   final reportFormKey = GlobalKey<FormState>();
   Position? position;
+  bool isFormDisabled = false;
 
   @override
   void initState() {
@@ -87,10 +92,13 @@ class _FireAlertScreenState extends State<FireAlertScreen> {
 
   Future<void> handleSubmitAlert() async {
     if (reportFormKey.currentState!.validate() && position != null) {
+      EasyLoading.show();
+
       final mediaBlocState = BlocProvider.of<MediaBloc>(context).state;
       final profile = ProfileUtils.userProfile(context);
-      EasyLoading.show();
-      if (profile != null) {
+      final currentReport =
+          await FireAlertRepositoryImpl().fetchCurrentFireAlert();
+      if (profile != null && currentReport == null) {
         FireAlert fireAlert = FireAlert(
           sender: profile.profilePk,
           googleMapUrl: googleMapUrlCtrl.text,
@@ -112,119 +120,173 @@ class _FireAlertScreenState extends State<FireAlertScreen> {
           );
         }
         await FireAlertRepositoryImpl().sendFireAlert(fireAlert).then((value) {
-          // set bloc fire alert exists
+          BlocProvider.of<FireAlertBloc>(context).add(OnFetchFireAlert());
+          BlocProvider.of<MediaBloc>(context).add(const InitialEvent());
         }).whenComplete(() {
           EasyLoading.dismiss();
         });
+      } else {
+        EasyLoading.dismiss();
+        showDialogReport();
       }
     }
   }
 
+  void showDialogReport() {
+    Future.delayed(const Duration(milliseconds: 500), () {
+      NDialog(
+        dialogStyle: DialogStyle(titleDivider: true),
+        title: const CustomText(text: AppConstant.appName),
+        content: const CustomText(text: "You have existing report"),
+        actions: <Widget>[
+          TextButton(
+              child: const CustomText(text: "Close"),
+              onPressed: () {
+                BlocProvider.of<FireAlertBloc>(context).add(
+                  OnFetchFireAlert(),
+                );
+                Navigator.pop(context);
+              }),
+        ],
+      ).show(context);
+    });
+  }
+
+  void setTextForm(FireAlertLoaded state) {
+    final alert = state.fireAlert;
+    locationCtrl.text = alert.message;
+    incidentTypeCtrl.text = alert.incidentType;
+    messageCtrl.text = alert.message;
+    googleMapUrlCtrl.text = alert.googleMapUrl;
+
+    if (alert.video != null) {
+      // BlocProvider.of<MediaBloc>(context)
+      //                   .add(AddVideoEvent(''));
+    }
+    if (alert.image != null) {
+// BlocProvider.of<MediaBloc>(context)
+//                         .add(AddVideoEvent(widget.filePath));
+    }
+
+    isFormDisabled = true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: position != null ? ColorName.primary : Colors.white,
-      padding: const EdgeInsets.all(15),
-      child: position != null
-          ? SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  SizedBox(
-                    // height: MediaQuery.of(context).size.height * 0.55,
-                    child: ReportFrom(
-                      formKey: reportFormKey,
-                      locationCtrl: locationCtrl,
-                      incidentTypeCtrl: incidentTypeCtrl,
-                      googleMapUrlCtrl: googleMapUrlCtrl,
-                      messageCtrl: messageCtrl,
-                      suffixLocationIcon: GestureDetector(
-                        onTap: () {
-                          checkLocationPermission();
-                        },
-                        child: const Icon(Icons.location_pin),
+    return BlocBuilder<FireAlertBloc, FireAlertState>(
+      builder: (context, state) {
+        if (state is FireAlertLoaded) {
+          setTextForm(state);
+        }
+
+        return Container(
+          color: position != null ? ColorName.primary : Colors.white,
+          padding: const EdgeInsets.all(15),
+          child: position != null
+              ? SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      SizedBox(
+                        child: ReportFrom(
+                          state: state,
+                          formKey: reportFormKey,
+                          locationCtrl: locationCtrl,
+                          incidentTypeCtrl: incidentTypeCtrl,
+                          googleMapUrlCtrl: googleMapUrlCtrl,
+                          messageCtrl: messageCtrl,
+                          suffixLocationIcon: GestureDetector(
+                            onTap: () {
+                              checkLocationPermission();
+                            },
+                            child: const Icon(Icons.location_pin),
+                          ),
+                          suffixIncidentIcon: GestureDetector(
+                            onTap: () {},
+                            child: const Icon(Icons.chevron_right),
+                          ),
+                          suffixGoogleMapIcon: GestureDetector(
+                            onTap: () {},
+                            child: const Icon(Icons.maps_home_work),
+                          ),
+                        ),
                       ),
-                      suffixIncidentIcon: GestureDetector(
-                        onTap: () {},
-                        child: const Icon(Icons.chevron_right),
-                      ),
-                      suffixGoogleMapIcon: GestureDetector(
-                        onTap: () {},
-                        child: const Icon(Icons.maps_home_work),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white),
-                    margin: const EdgeInsets.symmetric(vertical: 10),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
+                      if (state is! FireAlertLoaded) ...[
+                        Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white),
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          child: Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: IconButton(
-                                  onPressed: () async {
-                                    await checkCameraPermission();
-                                  },
-                                  icon: const Icon(
-                                    Icons.photo_camera,
-                                    size: 50,
-                                  ),
+                                padding: const EdgeInsets.all(15.0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: IconButton(
+                                        onPressed: () async {
+                                          await checkCameraPermission();
+                                        },
+                                        icon: const Icon(
+                                          Icons.photo_camera,
+                                          size: 50,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: IconButton(
+                                        onPressed: () async {
+                                          await checkCameraPermission(
+                                              isCamera: false);
+                                        },
+                                        icon: const Icon(
+                                          Icons.video_camera_back,
+                                          size: 50,
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: IconButton(
-                                  onPressed: () async {
-                                    await checkCameraPermission(
-                                        isCamera: false);
-                                  },
-                                  icon: const Icon(
-                                    Icons.video_camera_back,
-                                    size: 50,
-                                  ),
-                                ),
+                              CustomBtn(
+                                label: "Submit",
+                                onTap: () async {
+                                  await handleSubmitAlert();
+                                },
                               )
                             ],
                           ),
                         ),
-                        CustomBtn(
-                          label: "Submit",
-                          onTap: () async {
-                            await handleSubmitAlert();
-                          },
-                        )
                       ],
-                    ),
-                  )
-                ],
-              ),
-            )
-          : Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const CustomText(
-                      text: "Can't determine your location, please try again"),
-                  const SizedBox(
-                    height: 20,
+                    ],
                   ),
-                  CustomBtn(
-                      label: "Enable Location",
-                      onTap: () {
-                        checkLocationPermission();
-                      })
-                ],
-              ),
-            ),
+                )
+              : Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const CustomText(
+                          text:
+                              "Can't determine your location, please try again"),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomBtn(
+                          label: "Enable Location",
+                          onTap: () {
+                            checkLocationPermission();
+                          })
+                    ],
+                  ),
+                ),
+        );
+      },
     );
   }
 }
