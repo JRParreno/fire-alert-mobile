@@ -54,6 +54,16 @@ dependencies:
   cached_network_image: ^3.2.3
   persistent_bottom_nav_bar: ^5.0.2
   ndialog: ^4.3.0
+  firebase_messaging: ^14.6.1
+  flutter_local_notifications: ^14.0.1
+  camera: ^0.10.5
+  video_player: ^2.6.1
+  permission_handler: ^10.2.0
+  app_settings: ^4.2.0
+  popup_banner: ^1.0.0
+  geolocator: ^9.0.2
+  uuid: ^3.0.7
+  flutter_easyloading: ^3.0.5
 
 dev_dependencies:
   flutter_test:

@@ -20,8 +20,9 @@ class AppConstant {
   static const clientId = 'Y97qvQ67JvU3WkORPcshk77koxQ9ly5CrWYASIBY';
   static const clientSecret =
       'CIcoBGUhhxMz3DUORPEfjjdDbdY7g7iLFzd9SzSE9pMkJaOhDlCVmuo1bYJfGpsDt5AC9cBM7kjlOLUpmwrAWfO1vJ5UYljnwJVPWXn3AIJ4efJe7yGZ7g8Tojkf2Ypd';
-  static const serverUrl = 'http://192.168.1.15:8000';
+  static const serverUrl = 'http://192.168.1.7:8000';
   static const apiUrl = '$serverUrl/api';
   static const apiUser = '$serverUrl/user';
   static const appName = 'FireGuard';
+  static const googleApiKey = 'AIzaSyBK2zX8K3Jr2fObVaDBLmjN5vpZ-RPNMy8';
 }

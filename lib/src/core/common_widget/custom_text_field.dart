@@ -188,7 +188,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 ),
               ),
             ),
-          ]
+          ],
+          const SizedBox(
+            height: 10,
+          )
         ],
       ),
     );

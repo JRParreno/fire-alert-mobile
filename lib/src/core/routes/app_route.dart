@@ -2,6 +2,8 @@ import 'package:fire_alert_mobile/src/features/account/login/presentation/screen
 import 'package:fire_alert_mobile/src/features/account/otp/presentation/screen/otp_screen.dart';
 import 'package:fire_alert_mobile/src/features/account/profile/presentation/screens/profile_screen.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/screen/fire_alert_screen.dart';
+import 'package:fire_alert_mobile/src/features/fire_alert/presentation/widgets/camera.dart';
+import 'package:fire_alert_mobile/src/features/fire_alert/presentation/widgets/video.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/screen/home_screen.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/screen/information_screen.dart';
 import 'package:fire_alert_mobile/src/features/onboarding/onboarding_screen.dart';
@@ -30,6 +32,10 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
           return const InformationScreen();
         case FireAlertScreen.routeName:
           return const FireAlertScreen();
+        case TakePictureScreen.routeName:
+          return const TakePictureScreen();
+        case TakeVideoScreen.routeName:
+          return const TakeVideoScreen();
       }
 
       return const Scaffold(
