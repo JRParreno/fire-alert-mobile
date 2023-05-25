@@ -12,6 +12,7 @@ import 'package:fire_alert_mobile/src/features/fire_alert/data/models/incident_t
 import 'package:fire_alert_mobile/src/features/fire_alert/data/repositories/fire_alert_repository_impl.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/fire_alert_bloc/fire_alert_bloc.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/media_bloc/media_bloc.dart';
+import 'package:fire_alert_mobile/src/features/fire_alert/presentation/screen/report_success_screen.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/widgets/camera.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/widgets/select_incident_type.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/widgets/report_form.dart';
@@ -128,6 +129,12 @@ class _FireAlertScreenState extends State<FireAlertScreen> {
         await FireAlertRepositoryImpl().sendFireAlert(fireAlert).then((value) {
           BlocProvider.of<FireAlertBloc>(context).add(OnFetchFireAlert());
           BlocProvider.of<MediaBloc>(context).add(const InitialEvent());
+          PersistentNavBarNavigator.pushNewScreen(
+            context,
+            screen: const ReportSuccessScreen(),
+            withNavBar: true, // OPTIONAL VALUE. True by default.
+            pageTransitionAnimation: PageTransitionAnimation.cupertino,
+          );
         }).whenComplete(() {
           EasyLoading.dismiss();
         });
