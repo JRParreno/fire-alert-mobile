@@ -101,7 +101,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             }
           } catch (e) {
             // If an error occurs, log the error to the console.
-            print(e);
+            // print(e);
           }
         },
         child: const Icon(Icons.camera_alt),

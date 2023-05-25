@@ -4,13 +4,16 @@ import 'package:fire_alert_mobile/src/core/bloc/common/common_event.dart';
 import 'package:fire_alert_mobile/src/core/common_widget/common_widget.dart';
 import 'package:fire_alert_mobile/src/core/config/app_constant.dart';
 import 'package:fire_alert_mobile/src/core/location/get_current_location.dart';
+import 'package:fire_alert_mobile/src/core/location/url_launcher_google_map.dart';
 import 'package:fire_alert_mobile/src/core/permission/app_permission.dart';
 import 'package:fire_alert_mobile/src/core/utils/profile_utils.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/data/models/fire_alert.dart';
+import 'package:fire_alert_mobile/src/features/fire_alert/data/models/incident_type.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/data/repositories/fire_alert_repository_impl.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/fire_alert_bloc/fire_alert_bloc.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/media_bloc/media_bloc.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/widgets/camera.dart';
+import 'package:fire_alert_mobile/src/features/fire_alert/presentation/widgets/select_incident_type.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/widgets/report_form.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/widgets/video.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +40,7 @@ class _FireAlertScreenState extends State<FireAlertScreen> {
   final reportFormKey = GlobalKey<FormState>();
   Position? position;
   bool isFormDisabled = false;
+  IncidentType? incidentType;
 
   @override
   void initState() {
@@ -98,10 +102,12 @@ class _FireAlertScreenState extends State<FireAlertScreen> {
       final profile = ProfileUtils.userProfile(context);
       final currentReport =
           await FireAlertRepositoryImpl().fetchCurrentFireAlert();
-      if (profile != null && currentReport == null) {
+      final urlMap = UrlLauncherGoogleMap.getUrlMap(googleMapUrlCtrl.text);
+
+      if (profile != null && currentReport == null && urlMap != null) {
         FireAlert fireAlert = FireAlert(
           sender: profile.profilePk,
-          googleMapUrl: googleMapUrlCtrl.text,
+          googleMapUrl: urlMap,
           longitude: position!.latitude,
           latitude: position!.latitude,
           incidentType: "sample",
@@ -171,6 +177,34 @@ class _FireAlertScreenState extends State<FireAlertScreen> {
     isFormDisabled = true;
   }
 
+  void selectIncidentType() {
+    NDialog(
+      title: const CustomText(
+        text: "Select Incident Type",
+        style: TextStyle(fontSize: 18),
+      ),
+      content: SelectIncidentType(
+        incidentType: incidentType,
+        incidentTypes: AppConstant.incidentTypes,
+        onSelect: (IncidentType value) {
+          incidentTypeCtrl.text = value.name;
+          setState(() {
+            incidentType = value;
+          });
+
+          Navigator.pop(context);
+        },
+      ),
+      actions: [
+        TextButton(
+            child: const CustomText(text: "Close"),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
+      ],
+    ).show(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FireAlertBloc, FireAlertState>(
@@ -195,18 +229,25 @@ class _FireAlertScreenState extends State<FireAlertScreen> {
                           incidentTypeCtrl: incidentTypeCtrl,
                           googleMapUrlCtrl: googleMapUrlCtrl,
                           messageCtrl: messageCtrl,
-                          suffixLocationIcon: GestureDetector(
-                            onTap: () {
-                              checkLocationPermission();
-                            },
-                            child: const Icon(Icons.location_pin),
-                          ),
+                          suffixLocationIcon: const Icon(Icons.location_pin),
                           suffixIncidentIcon: GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              selectIncidentType();
+                            },
                             child: const Icon(Icons.chevron_right),
                           ),
                           suffixGoogleMapIcon: GestureDetector(
-                            onTap: () {},
+                            onTap: () async {
+                              if (position != null) {
+                                if (isFormDisabled) {
+                                  UrlLauncherGoogleMap.openGoogleMapLink(
+                                      googleMapUrlCtrl.text);
+                                } else {
+                                  UrlLauncherGoogleMap.openMap(
+                                      position!.latitude, position!.longitude);
+                                }
+                              }
+                            },
                             child: const Icon(Icons.maps_home_work),
                           ),
                         ),

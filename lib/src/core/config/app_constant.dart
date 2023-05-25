@@ -1,4 +1,6 @@
+import 'package:fire_alert_mobile/src/features/fire_alert/data/models/incident_type.dart';
 import 'package:flutter/material.dart';
+import 'package:map_launcher/map_launcher.dart';
 
 class AppConstant {
   static const kMockupHeight = 812;
@@ -20,9 +22,14 @@ class AppConstant {
   static const clientId = 'Y97qvQ67JvU3WkORPcshk77koxQ9ly5CrWYASIBY';
   static const clientSecret =
       'CIcoBGUhhxMz3DUORPEfjjdDbdY7g7iLFzd9SzSE9pMkJaOhDlCVmuo1bYJfGpsDt5AC9cBM7kjlOLUpmwrAWfO1vJ5UYljnwJVPWXn3AIJ4efJe7yGZ7g8Tojkf2Ypd';
-  static const serverUrl = 'http://192.168.1.7:8000';
+  static const serverUrl = 'http://192.168.110.106:8000';
   static const apiUrl = '$serverUrl/api';
   static const apiUser = '$serverUrl/user';
   static const appName = 'FireGuard';
   static const googleApiKey = 'AIzaSyBK2zX8K3Jr2fObVaDBLmjN5vpZ-RPNMy8';
+  static List<IncidentType> incidentTypes = [
+    IncidentType(name: "SAMPLE1", abbrv: "SA"),
+    IncidentType(name: "SAMPLE2", abbrv: "SA"),
+  ];
+  static Coords fireStation = Coords(13.6250963, 123.1890892);
 }

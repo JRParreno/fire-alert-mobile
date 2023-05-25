@@ -49,6 +49,7 @@ class ReportFrom extends StatelessWidget {
               padding: EdgeInsets.zero,
               parametersValidate: 'required',
               suffixIcon: suffixLocationIcon,
+              readOnly: state is FireAlertLoaded,
             ),
             CustomTextField(
               textController: incidentTypeCtrl,
@@ -56,7 +57,7 @@ class ReportFrom extends StatelessWidget {
               padding: EdgeInsets.zero,
               parametersValidate: 'required',
               suffixIcon: suffixIncidentIcon,
-              // readOnly: true,
+              readOnly: true,
             ),
             CustomTextField(
               textController: googleMapUrlCtrl,
@@ -64,6 +65,7 @@ class ReportFrom extends StatelessWidget {
               padding: EdgeInsets.zero,
               parametersValidate: 'required',
               suffixIcon: suffixGoogleMapIcon,
+              readOnly: state is FireAlertLoaded,
             ),
             CustomTextField(
               textController: messageCtrl,
@@ -73,6 +75,7 @@ class ReportFrom extends StatelessWidget {
               keyboardType: TextInputType.multiline,
               maxLines: 5,
               minLines: 3,
+              readOnly: state is FireAlertLoaded,
             ),
             if (state is FireAlertLoaded) ...[
               Column(
