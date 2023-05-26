@@ -14,22 +14,26 @@ class CustomNotification {
     String? payload,
   ) async {}
 
-  static void initialize(GlobalKey<NavigatorState> newKey) {
+  static Future<void> initialize() async {
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestPermission();
+
     const initializationSettings = InitializationSettings(
-      android: AndroidInitializationSettings('app_icon'),
+      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
       iOS: DarwinInitializationSettings(),
     );
-    flutterLocalNotificationsPlugin.initialize(
+    await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse:
           (NotificationResponse notificationResponse) async {
-        notificationResponse.payload;
+        onSelectNotification(notificationResponse.payload);
       },
     );
   }
 
   static Future show(RemoteMessage message) async {
-    print("onMessage: ${message.data}");
     if (Platform.isAndroid) {
       const channelId = 'com.thesis.fire_guard';
       const channelName = 'FireGuard';
@@ -52,7 +56,7 @@ class CustomNotification {
         notification!.title,
         notification.body,
         platformChannelSpecifics,
-        payload: jsonEncode(message.data),
+        payload: "test",
       );
     }
   }

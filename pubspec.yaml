@@ -66,6 +66,7 @@ dependencies:
   flutter_easyloading: ^3.0.5
   url_launcher: ^6.1.11
   map_launcher: ^2.5.0+1
+  firebase_core: ^2.13.0
 
 dev_dependencies:
   flutter_test:
@@ -132,3 +133,9 @@ flutter_gen:
   colors:
     inputs:
       - assets/color/colors.xml
+
+flutter_icons:
+  image_path: "assets/icons/icon.png"
+  android: true
+  ios: true
+  remove_alpha_ios: true

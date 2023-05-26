@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:fire_alert_mobile/src/core/bloc/common/common_event.dart';
 import 'package:fire_alert_mobile/src/core/bloc/profile/profile_bloc.dart';
 import 'package:fire_alert_mobile/src/core/local_storage/local_storage.dart';
@@ -9,6 +11,7 @@ import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/fire
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/media_bloc/media_bloc.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/screen/home_screen.dart';
 import 'package:fire_alert_mobile/src/features/onboarding/onboarding_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,12 +19,15 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-Future<void> firebaseNotificationHandler(RemoteMessage message) async {
-  CustomNotification.show(message);
+Future<void> firebaseNotificationHandler(RemoteMessage? message) async {
+  if (message != null) {
+    CustomNotification.show(message);
+  }
 }
 
 class FireAlertApp extends StatefulWidget {
   const FireAlertApp({super.key});
+  static final navKey = GlobalKey<NavigatorState>();
 
   @override
   State<FireAlertApp> createState() => _FireAlertAppState();
@@ -31,32 +37,43 @@ class _FireAlertAppState extends State<FireAlertApp> {
   @override
   void initState() {
     super.initState();
+
+    // initFirebaseMessaging();
+    // CustomNotification.initialize();
   }
 
   Future<void> initFirebaseMessaging() async {
+    await Firebase.initializeApp();
+
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
       alert: true,
       badge: true,
       sound: true,
     );
+    // FirebaseMessaging.onBackgroundMessage((RemoteMessage message) async {
+    //   return;
+    // });
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message == null) return;
-      // CustomNotification.onSelectNotification(jsonEncode(message.data), ref);
+      CustomNotification.onSelectNotification(jsonEncode(message.data));
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      // CustomNotification.onSelectNotification(jsonEncode(message.data), ref);
+      CustomNotification.onSelectNotification(jsonEncode(message.data));
     });
 
     FirebaseMessaging.onMessage.listen(firebaseNotificationHandler);
-    FirebaseMessaging.onBackgroundMessage((RemoteMessage message) async {
-      return;
-    });
   }
 
   Future<void> registerFcmToken() async {
     final token = await FirebaseMessaging.instance.getToken();
+
+    if (token != null) {
+      await ProfileRepositoryImpl().setPushToken(token).catchError((onError) {
+        //
+      });
+    }
   }
 
   void initialization(BuildContext ctx) async {
@@ -90,6 +107,7 @@ class _FireAlertAppState extends State<FireAlertApp> {
       BlocProvider.of<FireAlertBloc>(ctx).add(
         OnFetchFireAlert(),
       );
+      registerFcmToken();
     } else {
       BlocProvider.of<ProfileBloc>(ctx).add(
         const InitialEvent(),

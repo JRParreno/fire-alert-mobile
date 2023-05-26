@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1033318155215",
+    "project_id": "fireguard-66309",
+    "storage_bucket": "fireguard-66309.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1033318155215:android:4ac6d266e51f5bbc6d08ba",
+        "android_client_info": {
+          "package_name": "com.thesis.fire_guard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1033318155215-eag9uo3gbpl7lg4ucqeb5ioriaj0384d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6_K36bswcsPI2cK3iYlqr7JXLLpCY8WM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1033318155215-eag9uo3gbpl7lg4ucqeb5ioriaj0384d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

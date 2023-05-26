@@ -5,4 +5,5 @@ abstract class ProfileRepository {
   Future<Profile> updateProfile({
     required Profile profile,
   });
+  Future<void> setPushToken(String token);
 }
