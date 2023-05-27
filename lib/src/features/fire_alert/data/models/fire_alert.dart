@@ -8,6 +8,7 @@ class FireAlert {
   final double latitude;
   final String incidentType;
   final String message;
+  final String address;
   final String? image;
   final String? video;
   final String? pk;
@@ -19,6 +20,7 @@ class FireAlert {
     required this.latitude,
     required this.incidentType,
     required this.message,
+    required this.address,
     this.image,
     this.video,
     this.pk,
@@ -34,6 +36,7 @@ class FireAlert {
     String? image,
     String? video,
     String? pk,
+    String? address,
   }) {
     return FireAlert(
       sender: sender ?? this.sender,
@@ -45,6 +48,7 @@ class FireAlert {
       image: image ?? this.image,
       video: video ?? this.video,
       pk: pk ?? this.pk,
+      address: address ?? this.address,
     );
   }
 
@@ -59,6 +63,7 @@ class FireAlert {
       'image': image,
       'video': video,
       'pk': pk,
+      'address': address
     };
   }
 
@@ -70,6 +75,7 @@ class FireAlert {
       latitude: map['latitude'] as double,
       incidentType: map['incident_type'] as String,
       message: map['message'] as String,
+      address: map['address'] as String,
       image: map['image'] != null ? map['image'] as String : null,
       video: map['video'] != null ? map['video'] as String : null,
       pk: map['pk'] != null ? map['pk']!.toString() : null,
@@ -83,7 +89,7 @@ class FireAlert {
 
   @override
   String toString() {
-    return 'FireAlert(sender: $sender, googleMapUrl: $googleMapUrl, longitude: $longitude, latitude: $latitude, incidentType: $incidentType, message: $message, image: $image, video: $video, pk: $pk)';
+    return 'FireAlert(sender: $sender, googleMapUrl: $googleMapUrl, longitude: $longitude, latitude: $latitude, incidentType: $incidentType, message: $message, image: $image, video: $video, pk: $pk, address: $address)';
   }
 
   @override
@@ -98,6 +104,7 @@ class FireAlert {
         other.message == message &&
         other.image == image &&
         other.video == video &&
+        other.address == address &&
         other.pk == pk;
   }
 
@@ -111,6 +118,7 @@ class FireAlert {
         message.hashCode ^
         image.hashCode ^
         video.hashCode ^
+        address.hashCode ^
         pk.hashCode;
   }
 }

@@ -38,8 +38,8 @@ class _FireAlertAppState extends State<FireAlertApp> {
   void initState() {
     super.initState();
 
-    // initFirebaseMessaging();
-    // CustomNotification.initialize();
+    initFirebaseMessaging();
+    CustomNotification.initialize();
   }
 
   Future<void> initFirebaseMessaging() async {
@@ -61,6 +61,8 @@ class _FireAlertAppState extends State<FireAlertApp> {
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       CustomNotification.onSelectNotification(jsonEncode(message.data));
+      CustomNotification.onCheckFireAlertNotification(
+          navKey: FireAlertApp.navKey, message: message);
     });
 
     FirebaseMessaging.onMessage.listen(firebaseNotificationHandler);
@@ -132,6 +134,7 @@ class _FireAlertAppState extends State<FireAlertApp> {
             minTextAdapt: true,
             builder: ((context, child) {
               return MaterialApp(
+                navigatorKey: FireAlertApp.navKey,
                 builder: EasyLoading.init(),
                 theme: ThemeData(
                   primarySwatch: Colors.blue,

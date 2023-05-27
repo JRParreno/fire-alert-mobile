@@ -15,6 +15,7 @@ class FireAlertRepositoryImpl extends FireAlertRepository {
 
     final data = FormData.fromMap(
       {
+        "address": alert.address,
         "sender": int.parse(alert.sender),
         "google_map_url": alert.googleMapUrl,
         "message": alert.message,

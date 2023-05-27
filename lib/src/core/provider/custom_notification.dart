@@ -1,8 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:fire_alert_mobile/src/core/bloc/common/common_event.dart';
+import 'package:fire_alert_mobile/src/features/fire_alert/data/models/alert_notification.dart';
+import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/fire_alert_bloc/fire_alert_bloc.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 // ignore: avoid_classes_with_only_static_members
@@ -58,6 +62,25 @@ class CustomNotification {
         platformChannelSpecifics,
         payload: "test",
       );
+    }
+  }
+
+  static void onCheckFireAlertNotification(
+      {required GlobalKey<NavigatorState> navKey,
+      required RemoteMessage message}) {
+    final fireAlertBloc =
+        BlocProvider.of<FireAlertBloc>(navKey.currentState!.context);
+    final fireAlertState = fireAlertBloc.state;
+    if (message.data.containsKey('json') && fireAlertState is FireAlertLoaded) {
+      final alertNotificationJson = jsonDecode(message.data['json']);
+      final alertNotification =
+          AlertNotification.fromMap(alertNotificationJson);
+      if (alertNotification.isDone &&
+          fireAlertState.fireAlert.pk == alertNotification.pk) {
+        BlocProvider.of<FireAlertBloc>(navKey.currentState!.context).add(
+          const InitialEvent(),
+        );
+      }
     }
   }
 }

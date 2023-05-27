@@ -105,13 +105,17 @@ class _FireAlertScreenState extends State<FireAlertScreen> {
           await FireAlertRepositoryImpl().fetchCurrentFireAlert();
       final urlMap = UrlLauncherGoogleMap.getUrlMap(googleMapUrlCtrl.text);
 
-      if (profile != null && currentReport == null && urlMap != null) {
+      if (profile != null &&
+          currentReport == null &&
+          urlMap != null &&
+          incidentType != null) {
         FireAlert fireAlert = FireAlert(
+          address: locationCtrl.text,
           sender: profile.profilePk,
           googleMapUrl: urlMap,
           longitude: position!.latitude,
           latitude: position!.latitude,
-          incidentType: "sample",
+          incidentType: incidentType!.abbrv,
           message: messageCtrl.text,
         );
         if (mediaBlocState is MediaLoaded) {
@@ -165,24 +169,28 @@ class _FireAlertScreenState extends State<FireAlertScreen> {
     });
   }
 
-  void setTextForm(FireAlertLoaded state) {
-    final alert = state.fireAlert;
-    locationCtrl.text = alert.message;
-    incidentTypeCtrl.text = alert.incidentType;
-    messageCtrl.text = alert.message;
-    googleMapUrlCtrl.text = alert.googleMapUrl;
+  void setTextForm(FireAlertState state) {
+    if (state is FireAlertLoaded) {
+      final alert = state.fireAlert;
+      locationCtrl.text = alert.address;
+      incidentTypeCtrl.text = alert.incidentType;
+      messageCtrl.text = alert.message;
+      googleMapUrlCtrl.text = alert.googleMapUrl;
+      isFormDisabled = true;
+    } else {
+      if (isFormDisabled) {
+        locationCtrl.text = "";
+        incidentTypeCtrl.text = "";
+        messageCtrl.text = "";
+        googleMapUrlCtrl.text = "";
+        BlocProvider.of<MediaBloc>(context).add(const InitialEvent());
 
-    if (alert.video != null) {
-      // BlocProvider.of<MediaBloc>(context)
-      //                   .add(AddVideoEvent(''));
+        isFormDisabled = false;
+      }
     }
-    if (alert.image != null) {
-// BlocProvider.of<MediaBloc>(context)
-//                         .add(AddVideoEvent(widget.filePath));
-    }
-
-    isFormDisabled = true;
   }
+
+  void clearForm() {}
 
   void selectIncidentType() {
     NDialog(
@@ -216,9 +224,7 @@ class _FireAlertScreenState extends State<FireAlertScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<FireAlertBloc, FireAlertState>(
       builder: (context, state) {
-        if (state is FireAlertLoaded) {
-          setTextForm(state);
-        }
+        setTextForm(state);
 
         return Container(
           color: position != null ? ColorName.primary : Colors.white,
@@ -311,6 +317,30 @@ class _FireAlertScreenState extends State<FireAlertScreen> {
                             ],
                           ),
                         ),
+                      ] else ...[
+                        Container(
+                          margin: const EdgeInsets.only(top: 20),
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white),
+                          child: CustomBtn(
+                            label: "Refresh",
+                            onTap: () async {
+                              EasyLoading.show();
+
+                              BlocProvider.of<FireAlertBloc>(context).add(
+                                OnFetchFireAlert(),
+                              );
+                              Future.delayed(
+                                const Duration(seconds: 1),
+                                () {
+                                  EasyLoading.dismiss();
+                                },
+                              );
+                            },
+                          ),
+                        )
                       ],
                     ],
                   ),
