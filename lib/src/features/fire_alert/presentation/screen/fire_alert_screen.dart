@@ -105,43 +105,47 @@ class _FireAlertScreenState extends State<FireAlertScreen> {
           await FireAlertRepositoryImpl().fetchCurrentFireAlert();
       final urlMap = UrlLauncherGoogleMap.getUrlMap(googleMapUrlCtrl.text);
 
-      if (profile != null &&
-          currentReport == null &&
-          urlMap != null &&
-          incidentType != null) {
-        FireAlert fireAlert = FireAlert(
-          address: locationCtrl.text,
-          sender: profile.profilePk,
-          googleMapUrl: urlMap,
-          longitude: position!.latitude,
-          latitude: position!.latitude,
-          incidentType: incidentType!.abbrv,
-          message: messageCtrl.text,
-        );
-        if (mediaBlocState is MediaLoaded) {
-          fireAlert = fireAlert.copyWith(
-            image: mediaBlocState.imagePath != null &&
-                    mediaBlocState.imagePath!.isNotEmpty
-                ? mediaBlocState.imagePath
-                : null,
-            video: mediaBlocState.videoPath != null &&
-                    mediaBlocState.videoPath!.isNotEmpty
-                ? mediaBlocState.videoPath
-                : null,
+      if (profile != null && currentReport == null && incidentType != null) {
+        if (urlMap != null) {
+          FireAlert fireAlert = FireAlert(
+            address: locationCtrl.text,
+            sender: profile.profilePk,
+            googleMapUrl: urlMap,
+            longitude: position!.latitude,
+            latitude: position!.latitude,
+            incidentType: incidentType!.abbrv,
+            message: messageCtrl.text,
           );
-        }
-        await FireAlertRepositoryImpl().sendFireAlert(fireAlert).then((value) {
-          BlocProvider.of<FireAlertBloc>(context).add(OnFetchFireAlert());
-          BlocProvider.of<MediaBloc>(context).add(const InitialEvent());
-          PersistentNavBarNavigator.pushNewScreen(
-            context,
-            screen: const ReportSuccessScreen(),
-            withNavBar: true, // OPTIONAL VALUE. True by default.
-            pageTransitionAnimation: PageTransitionAnimation.cupertino,
-          );
-        }).whenComplete(() {
+          if (mediaBlocState is MediaLoaded) {
+            fireAlert = fireAlert.copyWith(
+              image: mediaBlocState.imagePath != null &&
+                      mediaBlocState.imagePath!.isNotEmpty
+                  ? mediaBlocState.imagePath
+                  : null,
+              video: mediaBlocState.videoPath != null &&
+                      mediaBlocState.videoPath!.isNotEmpty
+                  ? mediaBlocState.videoPath
+                  : null,
+            );
+          }
+          await FireAlertRepositoryImpl()
+              .sendFireAlert(fireAlert)
+              .then((value) {
+            BlocProvider.of<FireAlertBloc>(context).add(OnFetchFireAlert());
+            BlocProvider.of<MediaBloc>(context).add(const InitialEvent());
+            PersistentNavBarNavigator.pushNewScreen(
+              context,
+              screen: const ReportSuccessScreen(),
+              withNavBar: true, // OPTIONAL VALUE. True by default.
+              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+            );
+          }).whenComplete(() {
+            EasyLoading.dismiss();
+          });
+        } else {
           EasyLoading.dismiss();
-        });
+          showDialogReport(message: "Please insert valid google map url");
+        }
       } else {
         EasyLoading.dismiss();
         showDialogReport();
@@ -149,12 +153,12 @@ class _FireAlertScreenState extends State<FireAlertScreen> {
     }
   }
 
-  void showDialogReport() {
+  void showDialogReport({String? message}) {
     Future.delayed(const Duration(milliseconds: 500), () {
       NDialog(
         dialogStyle: DialogStyle(titleDivider: true),
         title: const CustomText(text: AppConstant.appName),
-        content: const CustomText(text: "You have existing report"),
+        content: CustomText(text: message ?? "You have existing report"),
         actions: <Widget>[
           TextButton(
               child: const CustomText(text: "Close"),
