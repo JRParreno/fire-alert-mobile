@@ -6,4 +6,8 @@ abstract class ProfileRepository {
     required Profile profile,
   });
   Future<void> setPushToken(String token);
+  Future<void> changePassword({
+    required String oldPassword,
+    required String newPassword,
+  });
 }

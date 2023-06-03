@@ -22,7 +22,7 @@ class AppConstant {
   static const clientId = 'Y97qvQ67JvU3WkORPcshk77koxQ9ly5CrWYASIBY';
   static const clientSecret =
       'CIcoBGUhhxMz3DUORPEfjjdDbdY7g7iLFzd9SzSE9pMkJaOhDlCVmuo1bYJfGpsDt5AC9cBM7kjlOLUpmwrAWfO1vJ5UYljnwJVPWXn3AIJ4efJe7yGZ7g8Tojkf2Ypd';
-  static const serverUrl = 'http://192.168.254.138:8000';
+  static const serverUrl = 'http://192.168.1.10:8000';
   static const apiUrl = '$serverUrl/api';
   static const apiUser = '$serverUrl/user';
   static const appName = 'FireGuard';
@@ -33,5 +33,5 @@ class AppConstant {
     IncidentType(name: "Natural Calamities", abbrv: "NATURAL_CALAMITIES"),
     IncidentType(name: "Others", abbrv: "OTHERS"),
   ];
-  static Coords fireStation = Coords(13.6250963, 123.1890892);
+  static Coords fireStation = Coords(14.5625316, 121.015261);
 }

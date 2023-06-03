@@ -1,11 +1,23 @@
 import 'package:fire_alert_mobile/src/core/common_widget/common_widget.dart';
 import 'package:fire_alert_mobile/src/core/utils/profile_utils.dart';
+import 'package:fire_alert_mobile/src/features/account/profile/presentation/screens/change_password_screen.dart';
+import 'package:fire_alert_mobile/src/features/account/profile/presentation/screens/update_account_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 class MenuOptions extends StatelessWidget {
   final BuildContext ctx;
   const MenuOptions({super.key, required this.ctx});
+
+  void navigate({required BuildContext context, required Widget screen}) {
+    PersistentNavBarNavigator.pushNewScreen(
+      context,
+      screen: screen,
+      withNavBar: false, // OPTIONAL VALUE. True by default.
+      pageTransitionAnimation: PageTransitionAnimation.cupertino,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +74,9 @@ class MenuOptions extends StatelessWidget {
           child: ListTile(
             title: const CustomText(text: 'Account Settings'),
             leading: const Icon(Icons.person),
-            onTap: () {},
+            onTap: () {
+              navigate(context: context, screen: const UpdateAccountScreen());
+            },
             trailing: const Icon(Icons.chevron_right),
             enableFeedback: true,
           ),
@@ -72,7 +86,9 @@ class MenuOptions extends StatelessWidget {
           child: ListTile(
             title: const CustomText(text: 'Update Password'),
             leading: const Icon(Icons.visibility_off),
-            onTap: () {},
+            onTap: () {
+              navigate(context: context, screen: const ChangePasswordScreen());
+            },
             trailing: const Icon(Icons.chevron_right),
           ),
         ),

@@ -75,7 +75,7 @@ class CustomNotification {
       final alertNotificationJson = jsonDecode(message.data['json']);
       final alertNotification =
           AlertNotification.fromMap(alertNotificationJson);
-      if (alertNotification.isDone &&
+      if ((alertNotification.isDone || alertNotification.isRejected) &&
           fireAlertState.fireAlert.pk == alertNotification.pk) {
         BlocProvider.of<FireAlertBloc>(navKey.currentState!.context).add(
           const InitialEvent(),

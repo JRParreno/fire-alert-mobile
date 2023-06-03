@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:fire_alert_mobile/src/core/config/app_constant.dart';
 import 'package:fire_alert_mobile/src/core/interceptor/api_interceptor.dart';
-import 'package:fire_alert_mobile/src/features/account/profile/data/models/fcm_token.dart';
 import 'package:fire_alert_mobile/src/features/account/profile/data/models/profile.dart';
 import 'package:fire_alert_mobile/src/features/account/profile/data/repositories/profile_repository.dart';
 
@@ -44,6 +43,22 @@ class ProfileRepositoryImpl extends ProfileRepository {
       throw error!;
     }).catchError((onError) {
       throw onError;
+    });
+  }
+
+  @override
+  Future<void> changePassword(
+      {required String oldPassword, required String newPassword}) async {
+    const String url = '${AppConstant.apiUrl}/change-password';
+
+    final data = {"old_password": oldPassword, "new_password": newPassword};
+
+    await ApiInterceptor.apiInstance()
+        .patch(url, data: data)
+        .catchError((error) {
+      throw error;
+    }).onError((error, stackTrace) {
+      throw error!;
     });
   }
 }

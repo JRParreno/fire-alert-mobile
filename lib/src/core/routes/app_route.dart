@@ -1,6 +1,8 @@
 import 'package:fire_alert_mobile/src/features/account/login/presentation/screen/login_screen.dart';
 import 'package:fire_alert_mobile/src/features/account/otp/presentation/screen/otp_screen.dart';
+import 'package:fire_alert_mobile/src/features/account/profile/presentation/screens/change_password_screen.dart';
 import 'package:fire_alert_mobile/src/features/account/profile/presentation/screens/profile_screen.dart';
+import 'package:fire_alert_mobile/src/features/account/profile/presentation/screens/update_account_screen.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/screen/fire_alert_screen.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/screen/report_success_screen.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/widgets/camera.dart';
@@ -39,6 +41,10 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
           return const TakeVideoScreen();
         case ReportSuccessScreen.routeName:
           return const ReportSuccessScreen();
+        case ChangePasswordScreen.routeName:
+          return const ChangePasswordScreen();
+        case UpdateAccountScreen.routeName:
+          return const UpdateAccountScreen();
       }
 
       return const Scaffold(

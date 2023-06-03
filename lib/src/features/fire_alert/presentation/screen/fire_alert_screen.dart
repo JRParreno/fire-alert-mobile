@@ -7,6 +7,7 @@ import 'package:fire_alert_mobile/src/core/location/get_current_location.dart';
 import 'package:fire_alert_mobile/src/core/location/url_launcher_google_map.dart';
 import 'package:fire_alert_mobile/src/core/permission/app_permission.dart';
 import 'package:fire_alert_mobile/src/core/utils/profile_utils.dart';
+import 'package:fire_alert_mobile/src/features/account/profile/presentation/screens/update_account_screen.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/data/models/fire_alert.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/data/models/incident_type.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/data/repositories/fire_alert_repository_impl.dart';
@@ -110,7 +111,7 @@ class _FireAlertScreenState extends State<FireAlertScreen> {
           FireAlert fireAlert = FireAlert(
             address: locationCtrl.text,
             sender: profile.profilePk,
-            googleMapUrl: urlMap,
+            googleMapUrl: googleMapUrlCtrl.text,
             longitude: position!.latitude,
             latitude: position!.latitude,
             incidentType: incidentType!.abbrv,
@@ -230,125 +231,19 @@ class _FireAlertScreenState extends State<FireAlertScreen> {
       builder: (context, state) {
         setTextForm(state);
 
+        final profile = ProfileUtils.userProfile(context);
+
         return Container(
-          color: position != null ? ColorName.primary : Colors.white,
+          color: position != null && profile != null && profile.isVerified
+              ? ColorName.primary
+              : Colors.white,
           padding: const EdgeInsets.all(15),
           child: position != null
-              ? SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      SizedBox(
-                        child: ReportFrom(
-                          state: state,
-                          formKey: reportFormKey,
-                          locationCtrl: locationCtrl,
-                          incidentTypeCtrl: incidentTypeCtrl,
-                          googleMapUrlCtrl: googleMapUrlCtrl,
-                          messageCtrl: messageCtrl,
-                          suffixLocationIcon: const Icon(Icons.location_pin),
-                          suffixIncidentIcon: GestureDetector(
-                            onTap: () {
-                              selectIncidentType();
-                            },
-                            child: const Icon(Icons.chevron_right),
-                          ),
-                          suffixGoogleMapIcon: GestureDetector(
-                            onTap: () async {
-                              if (position != null) {
-                                if (isFormDisabled) {
-                                  UrlLauncherGoogleMap.openGoogleMapLink(
-                                      googleMapUrlCtrl.text);
-                                } else {
-                                  UrlLauncherGoogleMap.openMap(
-                                      position!.latitude, position!.longitude);
-                                }
-                              }
-                            },
-                            child: const Icon(Icons.maps_home_work),
-                          ),
-                        ),
-                      ),
-                      if (state is! FireAlertLoaded) ...[
-                        Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white),
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: IconButton(
-                                        onPressed: () async {
-                                          await checkCameraPermission();
-                                        },
-                                        icon: const Icon(
-                                          Icons.photo_camera,
-                                          size: 50,
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: IconButton(
-                                        onPressed: () async {
-                                          await checkCameraPermission(
-                                              isCamera: false);
-                                        },
-                                        icon: const Icon(
-                                          Icons.video_camera_back,
-                                          size: 50,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              CustomBtn(
-                                label: "Submit",
-                                onTap: () async {
-                                  await handleSubmitAlert();
-                                },
-                              )
-                            ],
-                          ),
-                        ),
-                      ] else ...[
-                        Container(
-                          margin: const EdgeInsets.only(top: 20),
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white),
-                          child: CustomBtn(
-                            label: "Refresh",
-                            onTap: () async {
-                              EasyLoading.show();
-
-                              BlocProvider.of<FireAlertBloc>(context).add(
-                                OnFetchFireAlert(),
-                              );
-                              Future.delayed(
-                                const Duration(seconds: 1),
-                                () {
-                                  EasyLoading.dismiss();
-                                },
-                              );
-                            },
-                          ),
-                        )
-                      ],
-                    ],
-                  ),
-                )
+              ? profile != null
+                  ? profile.isVerified
+                      ? scrollform(state)
+                      : verifiedAccount()
+                  : logoutWidget(context)
               : Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -369,6 +264,155 @@ class _FireAlertScreenState extends State<FireAlertScreen> {
                 ),
         );
       },
+    );
+  }
+
+  Widget logoutWidget(BuildContext context) {
+    return CustomBtn(
+      label: "Relogin",
+      onTap: () {
+        ProfileUtils.handleLogout(context);
+      },
+    );
+  }
+
+  Widget verifiedAccount() {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const CustomText(text: "Verify your account first!"),
+          const SizedBox(
+            height: 20,
+          ),
+          CustomBtn(
+            label: "Verify now",
+            onTap: () {
+              PersistentNavBarNavigator.pushNewScreen(
+                context,
+                screen: const UpdateAccountScreen(),
+                withNavBar: false, // OPTIONAL VALUE. True by default.
+                pageTransitionAnimation: PageTransitionAnimation.cupertino,
+              );
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget scrollform(FireAlertState state) {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          SizedBox(
+            child: ReportFrom(
+              state: state,
+              formKey: reportFormKey,
+              locationCtrl: locationCtrl,
+              incidentTypeCtrl: incidentTypeCtrl,
+              googleMapUrlCtrl: googleMapUrlCtrl,
+              messageCtrl: messageCtrl,
+              suffixLocationIcon: const Icon(Icons.location_pin),
+              suffixIncidentIcon: GestureDetector(
+                onTap: () {
+                  selectIncidentType();
+                },
+                child: const Icon(Icons.chevron_right),
+              ),
+              suffixGoogleMapIcon: GestureDetector(
+                onTap: () async {
+                  if (position != null) {
+                    if (isFormDisabled) {
+                      UrlLauncherGoogleMap.openGoogleMapLink(
+                          googleMapUrlCtrl.text);
+                    } else {
+                      UrlLauncherGoogleMap.openMap(
+                          position!.latitude, position!.longitude);
+                    }
+                  }
+                },
+                child: const Icon(Icons.maps_home_work),
+              ),
+            ),
+          ),
+          if (state is! FireAlertLoaded) ...[
+            Container(
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10), color: Colors.white),
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: IconButton(
+                            onPressed: () async {
+                              await checkCameraPermission();
+                            },
+                            icon: const Icon(
+                              Icons.photo_camera,
+                              size: 50,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: IconButton(
+                            onPressed: () async {
+                              await checkCameraPermission(isCamera: false);
+                            },
+                            icon: const Icon(
+                              Icons.video_camera_back,
+                              size: 50,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  CustomBtn(
+                    label: "Submit",
+                    onTap: () async {
+                      await handleSubmitAlert();
+                    },
+                  )
+                ],
+              ),
+            ),
+          ] else ...[
+            Container(
+              margin: const EdgeInsets.only(top: 20),
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10), color: Colors.white),
+              child: CustomBtn(
+                label: "Refresh",
+                onTap: () async {
+                  EasyLoading.show();
+
+                  BlocProvider.of<FireAlertBloc>(context).add(
+                    OnFetchFireAlert(),
+                  );
+                  Future.delayed(
+                    const Duration(seconds: 1),
+                    () {
+                      EasyLoading.dismiss();
+                    },
+                  );
+                },
+              ),
+            )
+          ],
+        ],
+      ),
     );
   }
 }
