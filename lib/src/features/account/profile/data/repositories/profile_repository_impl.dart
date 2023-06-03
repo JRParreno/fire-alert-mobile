@@ -23,9 +23,31 @@ class ProfileRepositoryImpl extends ProfileRepository {
   }
 
   @override
-  Future<Profile> updateProfile({required Profile profile}) {
-    // TODO: implement updateProfile
-    throw UnimplementedError();
+  Future<Profile> updateProfile({
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String address,
+    required String contactNumber,
+  }) async {
+    const String url = '${AppConstant.apiUrl}/profile';
+
+    final data = {
+      "user": {"email": email, "first_name": firstName, "last_name": lastName},
+      "address": address,
+      "contact_number": contactNumber
+    };
+
+    return await ApiInterceptor.apiInstance()
+        .patch(url, data: data)
+        .then((value) {
+      final response = Profile.fromMap(value.data);
+      return response;
+    }).catchError((error) {
+      throw error;
+    }).onError((error, stackTrace) {
+      throw error!;
+    });
   }
 
   @override
@@ -55,6 +77,38 @@ class ProfileRepositoryImpl extends ProfileRepository {
 
     await ApiInterceptor.apiInstance()
         .patch(url, data: data)
+        .catchError((error) {
+      throw error;
+    }).onError((error, stackTrace) {
+      throw error!;
+    });
+  }
+
+  @override
+  Future<void> uploadIds(
+      {required String pk,
+      required String frontImagePath,
+      required String backImagePath}) async {
+    String url = '${AppConstant.apiUrl}/upload-id-photo/$pk';
+    DateTime dateToday = DateTime.now();
+
+    final data = FormData.fromMap(
+      {
+        "front_photo": await MultipartFile.fromFile(frontImagePath,
+            filename: '$dateToday - ${frontImagePath.split('/').last}'),
+        "back_photo": await MultipartFile.fromFile(backImagePath,
+            filename: '$dateToday - ${backImagePath.split('/').last}'),
+      },
+    );
+
+    await ApiInterceptor.apiInstance()
+        .put(
+      url,
+      data: data,
+      options: Options(
+        contentType: "multipart/form-data",
+      ),
+    )
         .catchError((error) {
       throw error;
     }).onError((error, stackTrace) {

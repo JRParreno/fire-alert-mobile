@@ -1,10 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:fire_alert_mobile/src/core/bloc/profile/profile_bloc.dart';
+import 'package:fire_alert_mobile/src/features/account/profile/presentation/bloc/upload_id/upload_id_bloc.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/fire_alert_bloc/fire_alert_bloc.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/media_bloc/media_bloc.dart';
 
 abstract class CommonState extends Equatable
-    implements ProfileState, MediaState, FireAlertState {
+    implements ProfileState, MediaState, FireAlertState, UploadIdState {
   const CommonState();
   @override
   List<Object> get props => [];

@@ -13,6 +13,8 @@ class Profile {
   final bool isVerified;
   final bool otpVerified;
   final String? profilePhoto;
+  final String? frontIdPhoto;
+  final String? backIdPhoto;
 
   Profile({
     required this.pk,
@@ -26,6 +28,8 @@ class Profile {
     required this.isVerified,
     required this.otpVerified,
     this.profilePhoto,
+    this.frontIdPhoto,
+    this.backIdPhoto,
   });
 
   Profile copyWith({
@@ -40,6 +44,8 @@ class Profile {
     bool? isVerified,
     bool? otpVerified,
     String? profilePhoto,
+    String? frontIdPhoto,
+    String? backIdPhoto,
   }) {
     return Profile(
       pk: pk ?? this.pk,
@@ -53,6 +59,8 @@ class Profile {
       isVerified: isVerified ?? this.isVerified,
       otpVerified: otpVerified ?? this.otpVerified,
       profilePhoto: profilePhoto ?? this.profilePhoto,
+      frontIdPhoto: frontIdPhoto ?? this.frontIdPhoto,
+      backIdPhoto: backIdPhoto ?? this.backIdPhoto,
     );
   }
 
@@ -69,6 +77,8 @@ class Profile {
       'isVerified': isVerified,
       'otpVerified': otpVerified,
       'profilePhoto': profilePhoto,
+      'frontIdPhoto': frontIdPhoto,
+      'backIdPhoto': backIdPhoto,
     };
   }
 
@@ -86,6 +96,10 @@ class Profile {
       otpVerified: map['otpVerified'] as bool,
       profilePhoto:
           map['profilePhoto'] != null ? map['profilePhoto'] as String : null,
+      frontIdPhoto:
+          map['frontIdPhoto'] != null ? map['frontIdPhoto'] as String : null,
+      backIdPhoto:
+          map['backIdPhoto'] != null ? map['backIdPhoto'] as String : null,
     );
   }
 
@@ -96,7 +110,7 @@ class Profile {
 
   @override
   String toString() {
-    return 'Profile(pk: $pk, profilePk: $profilePk, username: $username, firstName: $firstName, lastName: $lastName, email: $email, address: $address, contactNumber: $contactNumber, isVerified: $isVerified, otpVerified: $otpVerified, profilePhoto: $profilePhoto)';
+    return 'Profile(pk: $pk, profilePk: $profilePk, username: $username, firstName: $firstName, lastName: $lastName, email: $email, address: $address, contactNumber: $contactNumber, isVerified: $isVerified, otpVerified: $otpVerified, profilePhoto: $profilePhoto, frontIdPhoto: $frontIdPhoto, backIdPhoto: $backIdPhoto, )';
   }
 
   @override
@@ -113,6 +127,8 @@ class Profile {
         other.contactNumber == contactNumber &&
         other.isVerified == isVerified &&
         other.otpVerified == otpVerified &&
+        other.frontIdPhoto == frontIdPhoto &&
+        other.backIdPhoto == backIdPhoto &&
         other.profilePhoto == profilePhoto;
   }
 
@@ -128,6 +144,8 @@ class Profile {
         contactNumber.hashCode ^
         isVerified.hashCode ^
         otpVerified.hashCode ^
+        frontIdPhoto.hashCode ^
+        backIdPhoto.hashCode ^
         profilePhoto.hashCode;
   }
 }

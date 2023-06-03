@@ -1,13 +1,15 @@
 import 'package:app_settings/app_settings.dart';
 import 'package:fire_alert_mobile/gen/colors.gen.dart';
 import 'package:fire_alert_mobile/src/core/bloc/common/common_event.dart';
+import 'package:fire_alert_mobile/src/core/bloc/profile/profile_bloc.dart';
 import 'package:fire_alert_mobile/src/core/common_widget/common_widget.dart';
 import 'package:fire_alert_mobile/src/core/config/app_constant.dart';
 import 'package:fire_alert_mobile/src/core/location/get_current_location.dart';
 import 'package:fire_alert_mobile/src/core/location/url_launcher_google_map.dart';
 import 'package:fire_alert_mobile/src/core/permission/app_permission.dart';
 import 'package:fire_alert_mobile/src/core/utils/profile_utils.dart';
-import 'package:fire_alert_mobile/src/features/account/profile/presentation/screens/update_account_screen.dart';
+import 'package:fire_alert_mobile/src/features/account/profile/data/models/profile.dart';
+import 'package:fire_alert_mobile/src/features/account/profile/presentation/screens/upload_id_screen.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/data/models/fire_alert.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/data/models/incident_type.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/data/repositories/fire_alert_repository_impl.dart';
@@ -227,42 +229,47 @@ class _FireAlertScreenState extends State<FireAlertScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<FireAlertBloc, FireAlertState>(
-      builder: (context, state) {
-        setTextForm(state);
-
-        final profile = ProfileUtils.userProfile(context);
-
-        return Container(
-          color: position != null && profile != null && profile.isVerified
-              ? ColorName.primary
-              : Colors.white,
-          padding: const EdgeInsets.all(15),
-          child: position != null
-              ? profile != null
-                  ? profile.isVerified
-                      ? scrollform(state)
-                      : verifiedAccount()
-                  : logoutWidget(context)
-              : Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const CustomText(
-                          text:
-                              "Can't determine your location, please try again"),
-                      const SizedBox(
-                        height: 20,
+    return BlocBuilder<ProfileBloc, ProfileState>(
+      builder: (context, profileState) {
+        if (profileState is ProfileLoaded) {
+          return BlocBuilder<FireAlertBloc, FireAlertState>(
+            builder: (context, state) {
+              setTextForm(state);
+              final profile = profileState.profile;
+              return Container(
+                color: position != null && profile != null && profile.isVerified
+                    ? ColorName.primary
+                    : Colors.white,
+                padding: const EdgeInsets.all(15),
+                child: position != null
+                    ? profile != null
+                        ? profile.isVerified
+                            ? scrollform(state)
+                            : verifiedAccount(profile)
+                        : logoutWidget(context)
+                    : Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const CustomText(
+                                text:
+                                    "Can't determine your location, please try again"),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            CustomBtn(
+                                label: "Enable Location",
+                                onTap: () {
+                                  checkLocationPermission();
+                                })
+                          ],
+                        ),
                       ),
-                      CustomBtn(
-                          label: "Enable Location",
-                          onTap: () {
-                            checkLocationPermission();
-                          })
-                    ],
-                  ),
-                ),
-        );
+              );
+            },
+          );
+        }
+        return const SizedBox();
       },
     );
   }
@@ -276,26 +283,35 @@ class _FireAlertScreenState extends State<FireAlertScreen> {
     );
   }
 
-  Widget verifiedAccount() {
+  Widget verifiedAccount(Profile profile) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const CustomText(text: "Verify your account first!"),
+          CustomText(
+              text: profile.frontIdPhoto != null
+                  ? "Please wait your verification."
+                  : "Verify your account first!"),
           const SizedBox(
             height: 20,
           ),
-          CustomBtn(
-            label: "Verify now",
-            onTap: () {
-              PersistentNavBarNavigator.pushNewScreen(
-                context,
-                screen: const UpdateAccountScreen(),
-                withNavBar: false, // OPTIONAL VALUE. True by default.
-                pageTransitionAnimation: PageTransitionAnimation.cupertino,
-              );
-            },
-          )
+          if (profile.frontIdPhoto == null) ...[
+            CustomBtn(
+              label: "Verify now",
+              onTap: () async {
+                await PersistentNavBarNavigator.pushNewScreen(
+                  context,
+                  screen: const UploadIDScreen(),
+                  withNavBar: false, // OPTIONAL VALUE. True by default.
+                  pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                ).whenComplete(() {
+                  setState(() {
+                    position = position;
+                  });
+                });
+              },
+            )
+          ]
         ],
       ),
     );
