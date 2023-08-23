@@ -82,7 +82,7 @@ class UpdateAccountForm extends StatelessWidget {
               CustomTextField(
                 textController: mobileNoCtrl,
                 labelText: "Mobile number",
-                keyboardType: TextInputType.emailAddress,
+                keyboardType: TextInputType.number,
                 padding: EdgeInsets.zero,
                 parametersValidate: 'required',
                 validators: (value) {

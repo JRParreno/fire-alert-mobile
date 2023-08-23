@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fire_alert_mobile/src/core/bloc/profile/profile_bloc.dart';
 import 'package:fire_alert_mobile/src/core/common_widget/common_widget.dart';
 import 'package:fire_alert_mobile/src/core/common_widget/custom_appbar.dart';
 import 'package:fire_alert_mobile/src/core/config/app_constant.dart';
@@ -7,9 +8,12 @@ import 'package:fire_alert_mobile/src/core/local_storage/local_storage.dart';
 import 'package:fire_alert_mobile/src/core/utils/input_utils.dart';
 import 'package:fire_alert_mobile/src/core/utils/size_config.dart';
 import 'package:fire_alert_mobile/src/features/account/otp/presentation/widgets/otp_body.dart';
+import 'package:fire_alert_mobile/src/features/account/profile/data/models/profile.dart';
+import 'package:fire_alert_mobile/src/features/account/profile/data/repositories/profile_repository_impl.dart';
 import 'package:fire_alert_mobile/src/features/account/signup/data/repositories/signup_repository_impl.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/screen/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -99,12 +103,7 @@ class _OTPSCreenState extends State<OTPSCreen> {
       LocalStorage.storeLocalStorage('_token', value['accessToken']);
       LocalStorage.storeLocalStorage('_refreshToken', value['refreshToken']);
 
-      Future.delayed(const Duration(milliseconds: 500), () {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          HomeScreen.routeName,
-          (route) => false,
-        );
-      });
+      handleGetProfile();
     }).catchError((onError) {
       Future.delayed(const Duration(milliseconds: 500), () {
         CommonDialog.showMyDialog(
@@ -127,6 +126,8 @@ class _OTPSCreenState extends State<OTPSCreen> {
       });
       startTimer();
     }).catchError((onError) {
+      LoaderDialog.hide(context: context);
+
       Future.delayed(const Duration(milliseconds: 500), () {
         CommonDialog.showMyDialog(
           context: context,
@@ -136,7 +137,39 @@ class _OTPSCreenState extends State<OTPSCreen> {
         );
       });
     });
-    LoaderDialog.hide(context: context);
+  }
+
+  void handleGetProfile() async {
+    ProfileRepositoryImpl().fetchProfile().then((profile) async {
+      if (profile.otpVerified) {
+        await LocalStorage.storeLocalStorage('_user', profile.toJson());
+
+        handleSetProfileBloc(profile);
+        Future.delayed(const Duration(milliseconds: 500), () {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            HomeScreen.routeName,
+            (route) => false,
+          );
+        });
+      }
+    }).catchError((onError) {
+      LoaderDialog.hide(context: context);
+
+      Future.delayed(const Duration(milliseconds: 500), () {
+        CommonDialog.showMyDialog(
+          context: context,
+          title: "FireGuard",
+          body: onError['data']['error_message'],
+          isError: true,
+        );
+      });
+    });
+  }
+
+  void handleSetProfileBloc(Profile profile) {
+    BlocProvider.of<ProfileBloc>(context).add(
+      SetProfileEvent(profile: profile),
+    );
   }
 
   void handleBackPress() {
