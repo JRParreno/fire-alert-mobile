@@ -10,6 +10,8 @@ import 'package:fire_alert_mobile/src/features/account/profile/data/repositories
 import 'package:fire_alert_mobile/src/features/account/profile/presentation/bloc/upload_id/upload_id_bloc.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/fire_alert_bloc/fire_alert_bloc.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/media_bloc/media_bloc.dart';
+import 'package:fire_alert_mobile/src/features/home/data/bloc/home_carousel/home_carousel_bloc.dart';
+import 'package:fire_alert_mobile/src/features/home/data/repositories/carousel/carousel_repository_impl.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/screen/home_screen.dart';
 import 'package:fire_alert_mobile/src/features/onboarding/onboarding_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -126,6 +128,11 @@ class _FireAlertAppState extends State<FireAlertApp> {
         BlocProvider(create: (ctx) => MediaBloc()),
         BlocProvider(create: (ctx) => FireAlertBloc()),
         BlocProvider(create: (ctx) => UploadIdBloc()),
+        BlocProvider<HomeCarouselBloc>(
+          create: (context) => HomeCarouselBloc(
+            CarouselRepositoryImpl(),
+          ),
+        ),
       ],
       child: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (ctx, state) {

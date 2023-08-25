@@ -3,9 +3,15 @@ import 'package:fire_alert_mobile/src/core/bloc/profile/profile_bloc.dart';
 import 'package:fire_alert_mobile/src/features/account/profile/presentation/bloc/upload_id/upload_id_bloc.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/fire_alert_bloc/fire_alert_bloc.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/media_bloc/media_bloc.dart';
+import 'package:fire_alert_mobile/src/features/home/data/bloc/home_carousel/home_carousel_bloc.dart';
 
 abstract class CommonState extends Equatable
-    implements ProfileState, MediaState, FireAlertState, UploadIdState {
+    implements
+        ProfileState,
+        MediaState,
+        FireAlertState,
+        UploadIdState,
+        HomeCarouselState {
   const CommonState();
   @override
   List<Object> get props => [];
