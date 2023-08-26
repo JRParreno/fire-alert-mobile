@@ -20,6 +20,8 @@ import 'package:fire_alert_mobile/src/features/fire_alert/presentation/widgets/c
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/widgets/select_incident_type.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/widgets/report_form.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/widgets/video.dart';
+import 'package:fire_alert_mobile/src/features/home/presentation/widget/home_appbar.dart';
+import 'package:fire_alert_mobile/src/features/home/presentation/widget/home_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
@@ -229,48 +231,55 @@ class _FireAlertScreenState extends State<FireAlertScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProfileBloc, ProfileState>(
-      builder: (context, profileState) {
-        if (profileState is ProfileLoaded) {
-          return BlocBuilder<FireAlertBloc, FireAlertState>(
-            builder: (context, state) {
-              setTextForm(state);
-              final profile = profileState.profile;
-              return Container(
-                color: position != null && profile != null && profile.isVerified
-                    ? ColorName.primary
-                    : Colors.white,
-                padding: const EdgeInsets.all(15),
-                child: position != null
-                    ? profile != null
-                        ? profile.isVerified
-                            ? scrollform(state)
-                            : verifiedAccount(profile)
-                        : logoutWidget(context)
-                    : Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const CustomText(
-                                text:
-                                    "Can't determine your location, please try again"),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            CustomBtn(
-                                label: "Enable Location",
-                                onTap: () {
-                                  checkLocationPermission();
-                                })
-                          ],
+    return Scaffold(
+      drawer: const HomeDrawer(),
+      appBar: homeAppBar(
+        context: context,
+      ),
+      body: BlocBuilder<ProfileBloc, ProfileState>(
+        builder: (context, profileState) {
+          if (profileState is ProfileLoaded) {
+            return BlocBuilder<FireAlertBloc, FireAlertState>(
+              builder: (context, state) {
+                setTextForm(state);
+                final profile = profileState.profile;
+                return Container(
+                  color:
+                      position != null && profile != null && profile.isVerified
+                          ? ColorName.primary
+                          : Colors.white,
+                  padding: const EdgeInsets.all(15),
+                  child: position != null
+                      ? profile != null
+                          ? profile.isVerified
+                              ? scrollform(state)
+                              : verifiedAccount(profile)
+                          : logoutWidget(context)
+                      : Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const CustomText(
+                                  text:
+                                      "Can't determine your location, please try again"),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              CustomBtn(
+                                  label: "Enable Location",
+                                  onTap: () {
+                                    checkLocationPermission();
+                                  })
+                            ],
+                          ),
                         ),
-                      ),
-              );
-            },
-          );
-        }
-        return const SizedBox();
-      },
+                );
+              },
+            );
+          }
+          return const SizedBox();
+        },
+      ),
     );
   }
 

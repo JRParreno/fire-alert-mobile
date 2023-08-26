@@ -1,8 +1,6 @@
 import 'package:fire_alert_mobile/src/features/account/profile/presentation/screens/profile_screen.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/screen/fire_alert_screen.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/screen/information_screen.dart';
-import 'package:fire_alert_mobile/src/features/home/presentation/widget/home_appbar.dart';
-import 'package:fire_alert_mobile/src/features/home/presentation/widget/home_drawer.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/widget/navigation/persistent_bottom_navigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -55,10 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
-        drawer: const HomeDrawer(),
-        appBar: homeAppBar(
-          context: context,
-        ),
         body: SizedBox(
           child: PersistentBottomNavigation(
             buildScreens: _buildScreens,

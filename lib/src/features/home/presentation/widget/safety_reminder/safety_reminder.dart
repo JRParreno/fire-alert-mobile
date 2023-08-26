@@ -2,7 +2,9 @@ import 'package:fire_alert_mobile/gen/assets.gen.dart';
 import 'package:fire_alert_mobile/gen/colors.gen.dart';
 import 'package:fire_alert_mobile/src/core/common_widget/v_space.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/widget/safety_reminder/safety_reminder_card.dart';
+import 'package:fire_alert_mobile/src/features/safety_reminder/fire_safety/fire_safety_tips_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 class SafetyReminder extends StatelessWidget {
   const SafetyReminder({super.key});
@@ -33,6 +35,8 @@ class SafetyReminder extends StatelessWidget {
           SafetyReminderCard(
             image: AssetImage(Assets.images.fireSafetyTips.path),
             title: 'Fire Safety Tips',
+            onTap: () => handleNavigate(
+                context: context, screen: const FireSafetyTipsScreen()),
           ),
           Vspace(Vspace.xs.size),
           SafetyReminderCard(
@@ -46,6 +50,18 @@ class SafetyReminder extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void handleNavigate({
+    required BuildContext context,
+    required Widget screen,
+  }) {
+    PersistentNavBarNavigator.pushNewScreen(
+      context,
+      screen: screen,
+      withNavBar: true, // OPTIONAL VALUE. True by default.
+      pageTransitionAnimation: PageTransitionAnimation.cupertino,
     );
   }
 }

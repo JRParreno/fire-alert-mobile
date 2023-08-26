@@ -6,6 +6,8 @@ import 'package:fire_alert_mobile/src/features/home/data/bloc/home_carousel/home
 import 'package:fire_alert_mobile/src/features/home/presentation/widget/carousel/home_carousel.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/widget/carousel/home_carousel_list_scroll_indicators.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/widget/carousel/home_carousel_loading.dart';
+import 'package:fire_alert_mobile/src/features/home/presentation/widget/home_appbar.dart';
+import 'package:fire_alert_mobile/src/features/home/presentation/widget/home_drawer.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/widget/safety_reminder/safety_reminder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,6 +36,10 @@ class _InformationScreenState extends State<InformationScreen> {
       bloc: fireAlertBloc,
       builder: (context, state) {
         return Scaffold(
+          drawer: const HomeDrawer(),
+          appBar: homeAppBar(
+            context: context,
+          ),
           floatingActionButton: state is FireAlertLoaded
               ? FloatingActionButton(
                   backgroundColor: ColorName.primary,

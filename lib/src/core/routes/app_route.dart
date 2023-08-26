@@ -11,6 +11,7 @@ import 'package:fire_alert_mobile/src/features/fire_alert/presentation/widgets/v
 import 'package:fire_alert_mobile/src/features/home/presentation/screen/home_screen.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/screen/information_screen.dart';
 import 'package:fire_alert_mobile/src/features/onboarding/onboarding_screen.dart';
+import 'package:fire_alert_mobile/src/features/safety_reminder/fire_safety/fire_safety_tips_screen.dart';
 import 'package:fire_alert_mobile/src/features/splash/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -48,6 +49,8 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
           return const UpdateAccountScreen();
         case UploadIDScreen.routeName:
           return const UploadIDScreen();
+        case FireSafetyTipsScreen.routeName:
+          return const FireSafetyTipsScreen();
       }
 
       return const Scaffold(
