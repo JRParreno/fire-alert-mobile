@@ -1,6 +1,7 @@
 import 'package:fire_alert_mobile/gen/colors.gen.dart';
 import 'package:fire_alert_mobile/src/core/common_widget/common_widget.dart';
 import 'package:fire_alert_mobile/src/core/utils/profile_utils.dart';
+import 'package:fire_alert_mobile/src/features/account/profile/presentation/screens/update_account_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeDrawer extends StatelessWidget {
@@ -57,7 +58,10 @@ class HomeDrawer extends StatelessWidget {
                       Positioned(
                         right: 1,
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushNamed(UpdateAccountScreen.routeName);
+                          },
                           icon: const Icon(
                             Icons.edit,
                             size: 20,
