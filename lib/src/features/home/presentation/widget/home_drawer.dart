@@ -2,7 +2,9 @@ import 'package:fire_alert_mobile/gen/colors.gen.dart';
 import 'package:fire_alert_mobile/src/core/common_widget/common_widget.dart';
 import 'package:fire_alert_mobile/src/core/utils/profile_utils.dart';
 import 'package:fire_alert_mobile/src/features/account/profile/presentation/screens/update_account_screen.dart';
+import 'package:fire_alert_mobile/src/features/webview/webview_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({super.key});
@@ -59,8 +61,14 @@ class HomeDrawer extends StatelessWidget {
                         right: 1,
                         child: IconButton(
                           onPressed: () {
-                            Navigator.of(context)
-                                .pushNamed(UpdateAccountScreen.routeName);
+                            PersistentNavBarNavigator.pushNewScreen(
+                              context,
+                              screen: const UpdateAccountScreen(),
+                              withNavBar:
+                                  true, // OPTIONAL VALUE. True by default.
+                              pageTransitionAnimation:
+                                  PageTransitionAnimation.cupertino,
+                            );
                           },
                           icon: const Icon(
                             Icons.edit,
@@ -95,7 +103,40 @@ class HomeDrawer extends StatelessWidget {
                     ),
                     ListTile(
                       title: const CustomText(text: "Citizen's Charter"),
-                      onTap: () => {},
+                      onTap: () => {
+                        handleNavigateWebView(
+                            context: context,
+                            url:
+                                'https://region5.bfp.gov.ph/good-governance/bfp-citizens-charter/',
+                            title: "Citizen's Charter"),
+                      },
+                    ),
+                    const Divider(
+                      height: 0,
+                      color: ColorName.border,
+                    ),
+                    ListTile(
+                      title: const CustomText(text: "Mandates and Functions"),
+                      onTap: () => {
+                        handleNavigateWebView(
+                            context: context,
+                            url:
+                                'https://region5.bfp.gov.ph/about-us/mandates-and-functions/',
+                            title: "Mandates and Functions"),
+                      },
+                    ),
+                    const Divider(
+                      height: 0,
+                      color: ColorName.border,
+                    ),
+                    ListTile(
+                      title: const CustomText(text: "News"),
+                      onTap: () => {
+                        handleNavigateWebView(
+                            context: context,
+                            url: 'https://region5.bfp.gov.ph/',
+                            title: "News"),
+                      },
                     ),
                     const Divider(
                       height: 0,
@@ -148,6 +189,19 @@ class HomeDrawer extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+
+  void handleNavigateWebView({
+    required String url,
+    required String title,
+    required BuildContext context,
+  }) {
+    PersistentNavBarNavigator.pushNewScreen(
+      context,
+      screen: WebViewScreen(title: title, url: url),
+      withNavBar: true, // OPTIONAL VALUE. True by default.
+      pageTransitionAnimation: PageTransitionAnimation.cupertino,
     );
   }
 }
