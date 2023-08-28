@@ -3,12 +3,13 @@ import 'dart:async';
 import 'package:fire_alert_mobile/gen/colors.gen.dart';
 import 'package:fire_alert_mobile/src/core/common_widget/common_widget.dart';
 import 'package:fire_alert_mobile/src/core/common_widget/v_space.dart';
+import 'package:fire_alert_mobile/src/core/config/app_constant.dart';
 import 'package:flutter/material.dart';
-import 'package:image/image.dart' as img;
 
 import 'package:fire_alert_mobile/gen/assets.gen.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/data/models/fire_alert.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/widget/home_appbar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TrackingScreenArgs {
   const TrackingScreenArgs(this.fireAlert);
@@ -51,7 +52,9 @@ class _TrackingScreenState extends State<TrackingScreen> {
     return Scaffold(
       appBar: homeAppBar(context: context, title: 'Track'),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          handleMakePhoneCall(AppConstant.bfpNumber);
+        },
         backgroundColor: ColorName.primary,
         child: const Icon(Icons.phone),
       ),
@@ -111,6 +114,14 @@ class _TrackingScreenState extends State<TrackingScreen> {
         }
       },
     );
+  }
+
+  Future<void> handleMakePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
   }
 
   String getArrivalTime() {

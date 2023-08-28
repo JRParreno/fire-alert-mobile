@@ -3,6 +3,8 @@ import 'package:fire_alert_mobile/gen/colors.gen.dart';
 import 'package:fire_alert_mobile/src/core/common_widget/v_space.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/widget/safety_reminder/safety_reminder_card.dart';
 import 'package:fire_alert_mobile/src/features/safety_reminder/fire_safety/fire_safety_tips_screen.dart';
+import 'package:fire_alert_mobile/src/features/safety_reminder/first_aid_tips/first_aid_tips_screen.dart';
+import 'package:fire_alert_mobile/src/features/safety_reminder/tips_to_avoid_accident/tips_to_avoid_accident_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
@@ -42,11 +44,15 @@ class SafetyReminder extends StatelessWidget {
           SafetyReminderCard(
             image: AssetImage(Assets.images.firstAidTips.path),
             title: 'Fire Aid Tips',
+            onTap: () => handleNavigate(
+                context: context, screen: const FirstAidTipsScreen()),
           ),
           Vspace(Vspace.xs.size),
           SafetyReminderCard(
             image: AssetImage(Assets.images.tipsAvoidAccident.path),
             title: 'Tips to avoid accident',
+            onTap: () => handleNavigate(
+                context: context, screen: const TipsToAvoidAccidentScreen()),
           ),
         ],
       ),

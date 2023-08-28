@@ -34,4 +34,5 @@ class AppConstant {
     IncidentType(name: "Others", abbrv: "OTHERS"),
   ];
   static Coords fireStation = Coords(14.5625316, 121.015261);
+  static String bfpNumber = '09637026628';
 }
