@@ -26,6 +26,7 @@ class CustomTextField extends StatefulWidget {
   final FormFieldValidator<String>? validators;
   final bool obscureText;
   final FocusNode? focusNode;
+  final bool disableField;
 
   const CustomTextField({
     super.key,
@@ -51,6 +52,7 @@ class CustomTextField extends StatefulWidget {
     this.validators,
     this.obscureText = false,
     this.focusNode,
+    this.disableField = false,
   });
 
   @override

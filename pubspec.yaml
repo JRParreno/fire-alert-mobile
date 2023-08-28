@@ -67,6 +67,10 @@ dependencies:
   map_launcher: ^2.5.0+1
   firebase_core: ^2.13.0
   webview_flutter: ^3.0.0
+  google_maps_flutter: ^2.3.0
+  bloc_concurrency: ^0.2.2
+  easy_debounce: ^2.0.3
+  image: ^4.0.17
 
 dev_dependencies:
   flutter_test:

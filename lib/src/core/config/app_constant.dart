@@ -26,7 +26,7 @@ class AppConstant {
   static const apiUrl = '$serverUrl/api';
   static const apiUser = '$serverUrl/user';
   static const appName = 'FireGuard';
-  static const googleApiKey = 'AIzaSyBK2zX8K3Jr2fObVaDBLmjN5vpZ-RPNMy8';
+  static const googleApiKey = 'AIzaSyB6_K36bswcsPI2cK3iYlqr7JXLLpCY8WM';
   static List<IncidentType> incidentTypes = [
     IncidentType(name: "Fire Incidents", abbrv: "FIRE_INCIDENT"),
     IncidentType(name: "Vehicular Accidents", abbrv: "VEHICULAR_ACCIDENT"),

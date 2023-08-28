@@ -1,25 +1,15 @@
 import 'package:fire_alert_mobile/src/core/common_widget/common_widget.dart';
+import 'package:fire_alert_mobile/src/features/fire_alert/data/models/fire_alert.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/fire_alert_bloc/fire_alert_bloc.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/media_bloc/media_bloc.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/widgets/preview_photo.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/widgets/preview_video.dart';
+import 'package:fire_alert_mobile/src/features/tracking/presentation/tracking_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 class ReportFrom extends StatelessWidget {
-  final TextEditingController locationCtrl;
-  final TextEditingController incidentTypeCtrl;
-  final TextEditingController messageCtrl;
-  final TextEditingController googleMapUrlCtrl;
-  final GlobalKey<FormState> formKey;
-
-  final Widget suffixLocationIcon;
-  final Widget suffixIncidentIcon;
-  final Widget suffixGoogleMapIcon;
-
-  final FireAlertState state;
-
   const ReportFrom({
     super.key,
     required this.formKey,
@@ -28,10 +18,22 @@ class ReportFrom extends StatelessWidget {
     required this.suffixIncidentIcon,
     required this.incidentTypeCtrl,
     required this.messageCtrl,
-    required this.googleMapUrlCtrl,
-    required this.suffixGoogleMapIcon,
     required this.state,
+    required this.onTapLocation,
+    required this.onTapIncidentType,
+    this.fireAlert,
   });
+
+  final TextEditingController locationCtrl;
+  final TextEditingController incidentTypeCtrl;
+  final TextEditingController messageCtrl;
+  final GlobalKey<FormState> formKey;
+  final Widget suffixLocationIcon;
+  final Widget suffixIncidentIcon;
+  final FireAlertState state;
+  final VoidCallback onTapLocation;
+  final VoidCallback onTapIncidentType;
+  final FireAlert? fireAlert;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +51,8 @@ class ReportFrom extends StatelessWidget {
               padding: EdgeInsets.zero,
               parametersValidate: 'required',
               suffixIcon: suffixLocationIcon,
-              readOnly: state is FireAlertLoaded,
+              readOnly: true,
+              onTap: state is FireAlertLoaded ? null : onTapLocation,
             ),
             CustomTextField(
               textController: incidentTypeCtrl,
@@ -58,14 +61,7 @@ class ReportFrom extends StatelessWidget {
               parametersValidate: 'required',
               suffixIcon: suffixIncidentIcon,
               readOnly: true,
-            ),
-            CustomTextField(
-              textController: googleMapUrlCtrl,
-              labelText: "Google Map Link",
-              padding: EdgeInsets.zero,
-              parametersValidate: 'required',
-              suffixIcon: suffixGoogleMapIcon,
-              readOnly: state is FireAlertLoaded,
+              onTap: state is FireAlertLoaded ? null : onTapIncidentType,
             ),
             CustomTextField(
               textController: messageCtrl,
@@ -85,6 +81,19 @@ class ReportFrom extends StatelessWidget {
                     height: 10,
                   ),
                   buildVideoPreview(context),
+                  CustomBtn(
+                    backgroundColor: Colors.blue,
+                    label: "View Tracking",
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
+                    onTap: () {
+                      if (fireAlert != null) {
+                        handleNavigateTracking(
+                            context: context, fireAlert: fireAlert!);
+                      }
+                    },
+                  ),
                 ],
               ),
             ] else ...[
@@ -197,5 +206,17 @@ class ReportFrom extends StatelessWidget {
       }
     }
     return const SizedBox();
+  }
+
+  void handleNavigateTracking({
+    required BuildContext context,
+    required FireAlert fireAlert,
+  }) {
+    PersistentNavBarNavigator.pushNewScreen(
+      context,
+      screen: TrackingScreen(args: TrackingScreenArgs(fireAlert)),
+      withNavBar: true, // OPTIONAL VALUE. True by default.
+      pageTransitionAnimation: PageTransitionAnimation.cupertino,
+    );
   }
 }

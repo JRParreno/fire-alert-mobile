@@ -17,10 +17,10 @@ class FireAlertRepositoryImpl extends FireAlertRepository {
       {
         "address": alert.address,
         "sender": int.parse(alert.sender),
-        "google_map_url": alert.googleMapUrl,
         "message": alert.message,
         "longitude": alert.longitude,
         "latitude": alert.latitude,
+        "travel_time": alert.travelTime,
         "incident_type": alert.incidentType,
         "image": alert.image != null
             ? await MultipartFile.fromFile(alert.image!,

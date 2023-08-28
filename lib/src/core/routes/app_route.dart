@@ -13,6 +13,7 @@ import 'package:fire_alert_mobile/src/features/home/presentation/screen/informat
 import 'package:fire_alert_mobile/src/features/onboarding/onboarding_screen.dart';
 import 'package:fire_alert_mobile/src/features/safety_reminder/fire_safety/fire_safety_tips_screen.dart';
 import 'package:fire_alert_mobile/src/features/splash/screen/splash_screen.dart';
+import 'package:fire_alert_mobile/src/features/tracking/presentation/tracking_screen.dart';
 import 'package:flutter/material.dart';
 
 Route<dynamic>? generateRoute(RouteSettings settings) {
@@ -51,6 +52,9 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
           return const UploadIDScreen();
         case FireSafetyTipsScreen.routeName:
           return const FireSafetyTipsScreen();
+        case TrackingScreen.routeName:
+          final args = settings.arguments! as TrackingScreenArgs;
+          return TrackingScreen(args: args);
       }
 
       return const Scaffold(

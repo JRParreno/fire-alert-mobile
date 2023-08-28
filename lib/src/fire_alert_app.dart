@@ -8,6 +8,8 @@ import 'package:fire_alert_mobile/src/core/routes/app_route.dart';
 import 'package:fire_alert_mobile/src/features/account/profile/data/models/profile.dart';
 import 'package:fire_alert_mobile/src/features/account/profile/data/repositories/profile_repository_impl.dart';
 import 'package:fire_alert_mobile/src/features/account/profile/presentation/bloc/upload_id/upload_id_bloc.dart';
+import 'package:fire_alert_mobile/src/features/address/data/repositories/address_repository_impl.dart';
+import 'package:fire_alert_mobile/src/features/address/presentation/bloc/search_location/search_location_bloc.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/fire_alert_bloc/fire_alert_bloc.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/media_bloc/media_bloc.dart';
 import 'package:fire_alert_mobile/src/features/home/data/bloc/home_carousel/home_carousel_bloc.dart';
@@ -131,6 +133,11 @@ class _FireAlertAppState extends State<FireAlertApp> {
         BlocProvider<HomeCarouselBloc>(
           create: (context) => HomeCarouselBloc(
             CarouselRepositoryImpl(),
+          ),
+        ),
+        BlocProvider<SearchLocationBloc>(
+          create: (context) => SearchLocationBloc(
+            AddressRepositoryImpl(),
           ),
         ),
       ],

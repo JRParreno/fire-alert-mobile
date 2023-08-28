@@ -1,6 +1,5 @@
 import 'package:fire_alert_mobile/gen/colors.gen.dart';
 import 'package:fire_alert_mobile/src/core/bloc/common/common_state.dart';
-import 'package:fire_alert_mobile/src/core/location/url_launcher_google_map.dart';
 import 'package:fire_alert_mobile/src/features/fire_alert/presentation/bloc/fire_alert_bloc/fire_alert_bloc.dart';
 import 'package:fire_alert_mobile/src/features/home/data/bloc/home_carousel/home_carousel_bloc.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/widget/carousel/home_carousel.dart';
@@ -47,12 +46,7 @@ class _InformationScreenState extends State<InformationScreen> {
                     final state = BlocProvider.of<FireAlertBloc>(context).state;
 
                     if (state is FireAlertLoaded) {
-                      final urlMap = UrlLauncherGoogleMap.getUrlMap(
-                          state.fireAlert.googleMapUrl);
-
-                      if (urlMap != null) {
-                        UrlLauncherGoogleMap.openGoogleMapLink(urlMap);
-                      }
+                      // google map url link
                     }
                   },
                   heroTag: null,
