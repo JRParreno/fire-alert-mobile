@@ -34,7 +34,7 @@ class _OnboadingScreenState extends State<OnBoardingScreen> {
                     fit: BoxFit.fill)),
             child: Column(
               children: [
-                Flexible(
+                const Flexible(
                   flex: 1,
                   fit: FlexFit.loose,
                   child: SizedBox(
@@ -42,7 +42,7 @@ class _OnboadingScreenState extends State<OnBoardingScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: const [
+                      children: [
                         CustomText(
                           text: "Welcome",
                           style: TextStyle(

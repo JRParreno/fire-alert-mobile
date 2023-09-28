@@ -91,11 +91,13 @@ class _FireAlertAppState extends State<FireAlertApp> {
     final user = await LocalStorage.readLocalStorage('_user');
     if (user != null) {
       final userProfile = await ProfileRepositoryImpl().fetchProfile();
+      // ignore: use_build_context_synchronously
       setProfileBloc(profile: userProfile, ctx: ctx);
     } else {
       await LocalStorage.deleteLocalStorage('_user');
       await LocalStorage.deleteLocalStorage('_refreshToken');
       await LocalStorage.deleteLocalStorage('_token');
+      // ignore: use_build_context_synchronously
       setProfileBloc(profile: null, ctx: ctx);
     }
     Future.delayed(const Duration(seconds: 2), () {

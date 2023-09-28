@@ -114,6 +114,7 @@ class _OTPSCreenState extends State<OTPSCreen> {
         );
       });
     });
+    // ignore: use_build_context_synchronously
     LoaderDialog.hide(context: context);
   }
 

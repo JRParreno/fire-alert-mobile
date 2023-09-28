@@ -1,6 +1,7 @@
 import 'package:fire_alert_mobile/gen/colors.gen.dart';
 import 'package:fire_alert_mobile/src/core/common_widget/common_widget.dart';
 import 'package:fire_alert_mobile/src/core/utils/profile_utils.dart';
+import 'package:fire_alert_mobile/src/features/about/presentation/screen/about_bfp_ligao_screen.dart';
 import 'package:fire_alert_mobile/src/features/account/profile/presentation/screens/update_account_screen.dart';
 import 'package:fire_alert_mobile/src/features/webview/webview_screen.dart';
 import 'package:flutter/material.dart';
@@ -152,7 +153,15 @@ class HomeDrawer extends StatelessWidget {
                     ),
                     ListTile(
                       title: const CustomText(text: "About BFP Ligao"),
-                      onTap: () => {},
+                      onTap: () => {
+                        PersistentNavBarNavigator.pushNewScreen(
+                          context,
+                          screen: const AboutBFPLigaoScreen(),
+                          withNavBar: true, // OPTIONAL VALUE. True by default.
+                          pageTransitionAnimation:
+                              PageTransitionAnimation.cupertino,
+                        )
+                      },
                     ),
                     const Divider(
                       height: 0,
