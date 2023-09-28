@@ -2,6 +2,7 @@ import 'package:fire_alert_mobile/src/core/common_widget/common_widget.dart';
 import 'package:fire_alert_mobile/src/core/utils/profile_utils.dart';
 import 'package:fire_alert_mobile/src/features/account/profile/presentation/screens/change_password_screen.dart';
 import 'package:fire_alert_mobile/src/features/account/profile/presentation/screens/update_account_screen.dart';
+import 'package:fire_alert_mobile/src/features/account/profile/presentation/screens/update_profile_picture_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
@@ -76,6 +77,19 @@ class MenuOptions extends StatelessWidget {
             leading: const Icon(Icons.person),
             onTap: () {
               navigate(context: context, screen: const UpdateAccountScreen());
+            },
+            trailing: const Icon(Icons.chevron_right),
+            enableFeedback: true,
+          ),
+        ),
+        Card(
+          margin: const EdgeInsets.only(bottom: 10),
+          child: ListTile(
+            title: const CustomText(text: 'Update Profile Picture'),
+            leading: const Icon(Icons.image),
+            onTap: () {
+              navigate(
+                  context: context, screen: const UpdateProfilePictureScreen());
             },
             trailing: const Icon(Icons.chevron_right),
             enableFeedback: true,

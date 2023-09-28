@@ -115,4 +115,34 @@ class ProfileRepositoryImpl extends ProfileRepository {
       throw error!;
     });
   }
+
+  @override
+  Future<String> uploadPhoto(
+      {required String pk, required String imagePath}) async {
+    String url = '${AppConstant.apiUrl}/upload-photo/$pk';
+    DateTime dateToday = DateTime.now();
+
+    final data = FormData.fromMap(
+      {
+        "profile_photo": await MultipartFile.fromFile(imagePath,
+            filename: '$dateToday - ${imagePath.split('/').last}'),
+      },
+    );
+
+    return await ApiInterceptor.apiInstance()
+        .put(
+      url,
+      data: data,
+      options: Options(
+        contentType: "multipart/form-data",
+      ),
+    )
+        .then((value) {
+      return value.data['profile_photo'];
+    }).catchError((error) {
+      throw error;
+    }).onError((error, stackTrace) {
+      throw error!;
+    });
+  }
 }

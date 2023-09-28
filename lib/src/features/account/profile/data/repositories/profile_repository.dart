@@ -19,4 +19,8 @@ abstract class ProfileRepository {
     required String frontImagePath,
     required String backImagePath,
   });
+  Future<String> uploadPhoto({
+    required String pk,
+    required String imagePath,
+  });
 }

@@ -148,7 +148,10 @@ class _UpdateAccountScreenState extends State<UpdateAccountScreen> {
                 firstNameCtrl: firstNameCtrl,
                 formKey: formKey,
                 onSubmit: handleSubmit,
-              )
+              ),
+              const SizedBox(
+                height: 40,
+              ),
             ],
           ),
         ),
