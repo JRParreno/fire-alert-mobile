@@ -26,8 +26,6 @@ Future<Destination> calculateDistanceKmMatrix({
 
   final Uri url = Uri.https(baseUrl, distanceMatrix, params);
 
-  print(url.toString());
-
   final response = await client.get(url);
 
   if (response.statusCode == HttpStatus.ok) {

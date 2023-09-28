@@ -351,7 +351,7 @@ class _FireAlertScreenState extends State<FireAlertScreen> {
             latitude: currentLocation!.lat,
             incidentType: incidentType!.abbrv,
             message: messageCtrl.text,
-            travelTime: travelTime.durations[0]);
+            travelTime: travelTime.durations[0] + 2);
         if (mediaBlocState is MediaLoaded) {
           fireAlert = fireAlert.copyWith(
             image: mediaBlocState.imagePath != null &&
