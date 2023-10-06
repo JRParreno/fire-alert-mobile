@@ -1,3 +1,5 @@
+import 'package:email_validator/email_validator.dart';
+import 'package:fire_alert_mobile/src/features/account/forgot_password/presentation/screen/forgot_password_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/common_widget/common_widget.dart';
@@ -47,6 +49,12 @@ class LoginForm extends StatelessWidget {
                 keyboardType: TextInputType.emailAddress,
                 padding: EdgeInsets.zero,
                 parametersValidate: 'required',
+                validators: (value) {
+                  if (value != null && EmailValidator.validate(value)) {
+                    return null;
+                  }
+                  return "Please enter a valid email";
+                },
               ),
               const Divider(
                 color: Colors.transparent,
@@ -63,9 +71,10 @@ class LoginForm extends StatelessWidget {
                 height: 10,
                 color: Colors.transparent,
               ),
-              const Padding(
-                padding: EdgeInsets.only(left: 15.0),
+              Padding(
+                padding: const EdgeInsets.only(left: 15.0),
                 child: CustomTextLink(
+                  onTap: () => handleNavigateForgotPassword(context),
                   text: "Forgot Password?",
                 ),
               )
@@ -91,6 +100,12 @@ class LoginForm extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+
+  void handleNavigateForgotPassword(BuildContext context) {
+    Navigator.of(context).pushNamed(
+      ForgotPasswordScreen.routeName,
     );
   }
 }

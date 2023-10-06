@@ -1,3 +1,4 @@
+import 'package:fire_alert_mobile/src/features/account/forgot_password/presentation/screen/forgot_password_screen.dart';
 import 'package:fire_alert_mobile/src/features/account/login/presentation/screen/login_screen.dart';
 import 'package:fire_alert_mobile/src/features/account/otp/presentation/screen/otp_screen.dart';
 import 'package:fire_alert_mobile/src/features/account/profile/presentation/screens/change_password_screen.dart';
@@ -52,6 +53,8 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
           return const UploadIDScreen();
         case FireSafetyTipsScreen.routeName:
           return const FireSafetyTipsScreen();
+        case ForgotPasswordScreen.routeName:
+          return const ForgotPasswordScreen();
         case TrackingScreen.routeName:
           final args = settings.arguments! as TrackingScreenArgs;
           return TrackingScreen(args: args);
