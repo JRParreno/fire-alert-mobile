@@ -22,10 +22,12 @@ class _FireSafetyTipsScreenState extends State<FireSafetyTipsScreen>
   List<String> beforeListText = [];
   List<String> duringListText = [];
   List<String> afterListText = [];
+  List<String> atHomeListText = [];
+  List<String> atWorkplaceListText = [];
 
   @override
   void initState() {
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
     handleLoadFixture();
     super.initState();
   }
@@ -42,16 +44,29 @@ class _FireSafetyTipsScreenState extends State<FireSafetyTipsScreen>
       ),
       body: TabBarView(controller: _tabController, children: [
         ContentTab(
+          imageWidget: Assets.images.fireSafetyTabs.beforeFire.image(),
           isLoading: beforeListText.isEmpty,
           content: beforeListText,
         ),
         ContentTab(
+          imageWidget: Assets.images.fireSafetyTabs.duringFire.image(),
           isLoading: duringListText.isEmpty,
           content: duringListText,
         ),
         ContentTab(
+          imageWidget: Assets.images.fireSafetyTabs.afterFire.image(),
           isLoading: afterListText.isEmpty,
           content: afterListText,
+        ),
+        ContentTab(
+          imageWidget: Assets.images.fireSafetyTabs.atHomeFire.image(),
+          isLoading: atHomeListText.isEmpty,
+          content: atHomeListText,
+        ),
+        ContentTab(
+          imageWidget: Assets.images.fireSafetyTabs.atWorkplaceFire.image(),
+          isLoading: atWorkplaceListText.isEmpty,
+          content: atWorkplaceListText,
         )
       ]),
     );
@@ -66,6 +81,8 @@ class _FireSafetyTipsScreenState extends State<FireSafetyTipsScreen>
       beforeListText = List<String>.from(content['before']);
       duringListText = List<String>.from(content['during']);
       afterListText = List<String>.from(content['after']);
+      atHomeListText = List<String>.from(content['at_home']);
+      atWorkplaceListText = List<String>.from(content['at_workplace']);
     });
   }
 }

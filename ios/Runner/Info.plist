@@ -56,5 +56,9 @@
 	<string>sms</string>
 	<string>tel</string>
 	</array>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Needed to access location always when the app is open.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Needed to access location when the app is open and run in background.</string>
 </dict>
 </plist>

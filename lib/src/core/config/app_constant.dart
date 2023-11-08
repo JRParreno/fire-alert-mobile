@@ -1,5 +1,4 @@
 import 'package:fire_alert_mobile/src/features/fire_alert/data/models/incident_type.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:map_launcher/map_launcher.dart';
 
@@ -20,15 +19,15 @@ class AppConstant {
     begin: Alignment(-1.0, -0.3),
     end: Alignment(1.0, 0.3),
   );
-  static const clientId = kDebugMode
-      ? 'Y97qvQ67JvU3WkORPcshk77koxQ9ly5CrWYASIBY'
-      : 'T0V0UUephu4bVOT3O1d7t8UWGHoHVazGQNyFl5Ai';
-  static const clientSecret = kDebugMode
-      ? 'CIcoBGUhhxMz3DUORPEfjjdDbdY7g7iLFzd9SzSE9pMkJaOhDlCVmuo1bYJfGpsDt5AC9cBM7kjlOLUpmwrAWfO1vJ5UYljnwJVPWXn3AIJ4efJe7yGZ7g8Tojkf2Ypd'
-      : 'Oef7sXslcnd00gdM8ivk3BORDhzVSAwsSCRbmODODBUxGsq8EcO10KLWjxT9zoEhlpXGFTbxocl7jSZrLPbWO97p58hMmD1NqUpZR9G14Egfc8NitcerOUxoBBu37NgO';
-  static const serverUrl = kDebugMode
-      ? 'http://192.168.1.12:8000'
-      : 'https://fire-alert-core.onrender.com';
+  static const clientId = 'Y97qvQ67JvU3WkORPcshk77koxQ9ly5CrWYASIBY';
+  static const clientSecret =
+      'CIcoBGUhhxMz3DUORPEfjjdDbdY7g7iLFzd9SzSE9pMkJaOhDlCVmuo1bYJfGpsDt5AC9cBM7kjlOLUpmwrAWfO1vJ5UYljnwJVPWXn3AIJ4efJe7yGZ7g8Tojkf2Ypd';
+  static const serverUrl = 'http://192.168.1.17:8000';
+
+  // static const clientId = 'T0V0UUephu4bVOT3O1d7t8UWGHoHVazGQNyFl5Ai';
+  // static const clientSecret =
+  //     'Oef7sXslcnd00gdM8ivk3BORDhzVSAwsSCRbmODODBUxGsq8EcO10KLWjxT9zoEhlpXGFTbxocl7jSZrLPbWO97p58hMmD1NqUpZR9G14Egfc8NitcerOUxoBBu37NgO';
+  // static const serverUrl = 'https://fire-alert-core.onrender.com';
   static const apiUrl = '$serverUrl/api';
   static const apiUser = '$serverUrl/user';
   static const appName = 'FireGuard';
@@ -39,6 +38,6 @@ class AppConstant {
     IncidentType(name: "Natural Calamities", abbrv: "NATURAL_CALAMITIES"),
     IncidentType(name: "Others", abbrv: "OTHERS"),
   ];
-  static Coords fireStation = Coords(14.5625316, 121.015261);
+  static Coords fireStation = Coords(13.2397934, 123.5362970);
   static String bfpNumber = '09637026628';
 }

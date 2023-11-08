@@ -14,6 +14,7 @@ class CustomTabBar extends StatelessWidget implements PreferredSizeWidget {
     return Container(
       color: ColorName.dimGray,
       child: TabBar(
+        isScrollable: true,
         controller: tabController,
         enableFeedback: true,
         indicatorColor: ColorName.primary,
@@ -37,6 +38,12 @@ class CustomTabBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           Tab(
             text: 'After',
+          ),
+          Tab(
+            text: 'At Home',
+          ),
+          Tab(
+            text: 'At Workplace',
           ),
         ],
       ),
