@@ -13,6 +13,7 @@ import 'package:fire_alert_mobile/src/features/home/presentation/screen/home_scr
 import 'package:fire_alert_mobile/src/features/home/presentation/screen/information_screen.dart';
 import 'package:fire_alert_mobile/src/features/onboarding/onboarding_screen.dart';
 import 'package:fire_alert_mobile/src/features/safety_reminder/fire_safety/fire_safety_tips_screen.dart';
+import 'package:fire_alert_mobile/src/features/safety_reminder/natural_disaster/natural_disaster_screen.dart';
 import 'package:fire_alert_mobile/src/features/splash/screen/splash_screen.dart';
 import 'package:fire_alert_mobile/src/features/tracking/presentation/tracking_screen.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +59,8 @@ Route<dynamic>? generateRoute(RouteSettings settings) {
         case TrackingScreen.routeName:
           final args = settings.arguments! as TrackingScreenArgs;
           return TrackingScreen(args: args);
+        case NaturalDisasterScreen.routeName:
+          return const NaturalDisasterScreen();
       }
 
       return const Scaffold(

@@ -73,6 +73,7 @@ dependencies:
   image: ^4.0.17
   image_picker: ^1.0.4
   email_validator: ^2.1.17
+  formatted_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -99,6 +100,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/fire_safety_tabs/
+    - assets/images/first_aid_category/
     - assets/svgs/
     - assets/fixtures/
   #   - images/a_dot_ham.jpeg
