@@ -95,7 +95,16 @@ class HomeDrawer extends StatelessWidget {
                 child: Column(
                   children: [
                     ListTile(
-                      title: const CustomText(text: "Director's Message"),
+                      title: const Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(Icons.message),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          CustomText(text: "Director's Message"),
+                        ],
+                      ),
                       onTap: () => {},
                     ),
                     const Divider(
@@ -103,7 +112,16 @@ class HomeDrawer extends StatelessWidget {
                       color: ColorName.border,
                     ),
                     ListTile(
-                      title: const CustomText(text: "Citizen's Charter"),
+                      title: const Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(Icons.people),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          CustomText(text: "Citizen's Charter"),
+                        ],
+                      ),
                       onTap: () => {
                         handleNavigateWebView(
                             context: context,
@@ -117,7 +135,16 @@ class HomeDrawer extends StatelessWidget {
                       color: ColorName.border,
                     ),
                     ListTile(
-                      title: const CustomText(text: "Mandates and Functions"),
+                      title: const Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(Icons.settings),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          CustomText(text: "Mandates and Functions"),
+                        ],
+                      ),
                       onTap: () => {
                         handleNavigateWebView(
                             context: context,
@@ -131,7 +158,16 @@ class HomeDrawer extends StatelessWidget {
                       color: ColorName.border,
                     ),
                     ListTile(
-                      title: const CustomText(text: "News"),
+                      title: const Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(Icons.article),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          CustomText(text: "News"),
+                        ],
+                      ),
                       onTap: () => {
                         handleNavigateWebView(
                             context: context,
@@ -144,7 +180,16 @@ class HomeDrawer extends StatelessWidget {
                       color: ColorName.border,
                     ),
                     ListTile(
-                      title: const CustomText(text: "FAQ"),
+                      title: const Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(Icons.help),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          CustomText(text: "FAQ"),
+                        ],
+                      ),
                       onTap: () => {},
                     ),
                     const Divider(
@@ -152,7 +197,16 @@ class HomeDrawer extends StatelessWidget {
                       color: ColorName.border,
                     ),
                     ListTile(
-                      title: const CustomText(text: "About BFP Ligao"),
+                      title: const Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(Icons.import_contacts),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          CustomText(text: "About BFP Ligao"),
+                        ],
+                      ),
                       onTap: () => {
                         PersistentNavBarNavigator.pushNewScreen(
                           context,
@@ -168,7 +222,16 @@ class HomeDrawer extends StatelessWidget {
                       color: ColorName.border,
                     ),
                     ListTile(
-                      title: const CustomText(text: "Directory"),
+                      title: const Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(Icons.info),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          CustomText(text: "Directory"),
+                        ],
+                      ),
                       onTap: () => {},
                     ),
                   ],
