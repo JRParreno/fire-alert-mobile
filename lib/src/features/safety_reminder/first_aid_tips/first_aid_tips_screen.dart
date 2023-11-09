@@ -1,11 +1,24 @@
-import 'dart:convert';
+import 'package:fire_alert_mobile/src/features/safety_reminder/first_aid_tips/first_aid_content_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import 'package:fire_alert_mobile/gen/assets.gen.dart';
-import 'package:fire_alert_mobile/gen/colors.gen.dart';
-import 'package:fire_alert_mobile/src/core/common_widget/v_space.dart';
 import 'package:fire_alert_mobile/src/features/home/presentation/widget/home_appbar.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:fire_alert_mobile/src/features/home/presentation/widget/safety_reminder/safety_reminder_card.dart';
+
+class ScreenData {
+  final String path;
+  final String jsonKey;
+  final String title;
+  final String fixturePath;
+
+  ScreenData({
+    required this.path,
+    required this.jsonKey,
+    required this.title,
+    required this.fixturePath,
+  });
+}
 
 class FirstAidTipsScreen extends StatefulWidget {
   const FirstAidTipsScreen({super.key});
@@ -17,14 +30,6 @@ class FirstAidTipsScreen extends StatefulWidget {
 }
 
 class _FirstAidTipsScreenState extends State<FirstAidTipsScreen> {
-  List<String> contents = [];
-
-  @override
-  void initState() {
-    handleLoadFixture();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,52 +39,106 @@ class _FirstAidTipsScreenState extends State<FirstAidTipsScreen> {
         backgroundColor: Colors.white,
         isDark: false,
       ),
-      body: Container(
-        color: ColorName.primary,
-        padding: const EdgeInsets.all(15),
-        child: ListView.builder(
-          itemCount: contents.length,
-          itemBuilder: (context, index) {
-            final text = contents[index];
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (text[0] == '✔') ...[
-                  Text(
-                    text,
-                    style: const TextStyle(
-                      fontSize: 15,
-                    ),
-                  ),
-                ] else ...[
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                    ),
-                    child: Text(
-                      text,
-                      style: const TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  )
-                ],
-                Vspace(Vspace.sm.size),
-              ],
-            );
-          },
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              firstAidCategoryCard('CUTS_AND_SCRAPES'),
+              firstAidCategoryCard('BURNS'),
+              firstAidCategoryCard('NOSEBLEEDS'),
+              firstAidCategoryCard('BITES'),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Future<void> handleLoadFixture() async {
-    final jsonPath = Assets.fixtures.firstAidTips;
-    final jsonResponse = await rootBundle.loadString(jsonPath);
-    final jsonDecode = await json.decode(jsonResponse);
-    final content = jsonDecode['content'];
-    setState(() {
-      contents = List<String>.from(content);
-    });
+  void handleNavigate({
+    required BuildContext context,
+    required ScreenData screenData,
+  }) {
+    final args = FirstAidContentScreenArgs(
+        imagePath: screenData.path,
+        jsonKey: screenData.jsonKey,
+        title: screenData.title,
+        jsonFixturePath: screenData.fixturePath);
+
+    PersistentNavBarNavigator.pushNewScreenWithRouteSettings(
+      settings: RouteSettings(
+          arguments: FirstAidContentScreenArgs(
+              imagePath: screenData.path,
+              jsonKey: screenData.jsonKey,
+              title: screenData.title,
+              jsonFixturePath: screenData.fixturePath)),
+      context,
+      screen: FirstAidContentScreen(args: args),
+      withNavBar: true, // OPTIONAL VALUE. True by default.
+      pageTransitionAnimation: PageTransitionAnimation.cupertino,
+    );
+  }
+
+  Widget firstAidCategoryCard(String category) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 30),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(50),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.75),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, 5),
+          )
+        ],
+      ),
+      height: 80,
+      child: ClipRRect(
+        clipBehavior: Clip.hardEdge,
+        borderRadius: BorderRadius.circular(50),
+        child: SafetyReminderCard(
+          image: AssetImage(setupData(category).path),
+          title: '',
+          onTap: () =>
+              handleNavigate(context: context, screenData: setupData(category)),
+        ),
+      ),
+    );
+  }
+
+  ScreenData setupData(String category) {
+    switch (category) {
+      case 'CUTS_AND_SCRAPES':
+        return ScreenData(
+          path: Assets.images.firstAidCategory.cutsAndScrapes.path,
+          jsonKey: 'cuts_scrapes',
+          title: 'Cuts and Scrapes',
+          fixturePath: Assets.fixtures.cutsScrapes,
+        );
+      case 'BURNS':
+        return ScreenData(
+          path: Assets.images.firstAidCategory.burns.path,
+          jsonKey: 'burns',
+          title: 'Burns',
+          fixturePath: Assets.fixtures.burns,
+        );
+      case 'NOSEBLEEDS':
+        return ScreenData(
+          path: Assets.images.firstAidCategory.nosebleeds.path,
+          jsonKey: 'nosebleeds',
+          title: 'Nosebleeds',
+          fixturePath: Assets.fixtures.nosebleeds,
+        );
+      default:
+        return ScreenData(
+          path: Assets.images.firstAidCategory.bites.path,
+          jsonKey: 'bites',
+          title: 'Bites',
+          fixturePath: Assets.fixtures.bites,
+        );
+    }
   }
 }
